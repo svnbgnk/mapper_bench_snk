@@ -6,7 +6,7 @@ rule yara_index:
     input:
         "{prefix}.fasta"
     output:
-        touch("{prefix}.yara")
+        touch("{prefix}.yara.index")
     log:
         "{prefix}.yara.index.log"
     params:
@@ -17,7 +17,7 @@ rule yara_index:
 
 rule yara_map_se:
     input:
-        "{prefix}/{reference}.yara",
+        "{prefix}/{reference}.yara.index",
         "{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"

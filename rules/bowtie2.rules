@@ -6,7 +6,7 @@ rule bowtie2_index:
     input:
         "{prefix}.fasta"
     output:
-        touch("{prefix}.bowtie2")
+        touch("{prefix}.bowtie2.index")
     log:
         "{prefix}.bowtie2.index.log"
     params:
@@ -18,7 +18,7 @@ rule bowtie2_index:
 
 rule bowtie2_map_se:
     input:
-        idx="{prefix}/{reference}.bowtie2",
+        idx="{prefix}/{reference}.bowtie2.index",
         fq="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"

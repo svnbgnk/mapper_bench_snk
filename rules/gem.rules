@@ -4,7 +4,7 @@ rule gem_index:
     input:
         "{prefix}.fasta"
     output:
-        touch("{prefix}.gem")
+        touch("{prefix}.gem.index")
     log:
         "{prefix}.gem.index.log"
     params:
@@ -16,7 +16,7 @@ rule gem_index:
 
 rule gem_map_se:
     input:
-        idx="{prefix}/{reference}.gem",
+        idx="{prefix}/{reference}.gem.index",
         fq="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"

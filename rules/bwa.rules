@@ -4,7 +4,7 @@ rule bwa_index:
     input:
         "{prefix}.fasta"
     output:
-        touch("{prefix}.bwa")
+        touch("{prefix}.bwa.index")
     log:
         "{prefix}.bwa.index.log"
     shell:
@@ -14,7 +14,7 @@ rule bwa_index:
 
 rule bwamem_map_se:
     input:
-        idx="{prefix}/{reference}.bwa",
+        idx="{prefix}/{reference}.bwa.index",
         fq="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"

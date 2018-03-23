@@ -30,3 +30,10 @@ snakemake evaluate;
 snakemake report;
 ```
 
+OR simply:
+
+```
+./run_benchmark.sh
+```
+
+
