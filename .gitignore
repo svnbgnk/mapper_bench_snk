@@ -1,6 +1,7 @@
 ## Core snakemake files:
 data/
 .snakemake/
+*.svg
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
