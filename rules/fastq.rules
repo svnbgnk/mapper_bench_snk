@@ -1,0 +1,58 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+from snakemake.utils import linecount
+
+from math import log10, ceil
+
+def make_parts(p):
+    return [str(x).zfill(int(ceil(log10(p)))) for x in range(0, p)]
+
+
+from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
+FTP = FTPRemoteProvider()
+rule reads_download:
+    input:
+        lambda wildcards: FTP.remote(config["fastq"][wildcards.reads],
+                                     insecure=True, keep_local=False)
+    output:
+        "{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+"
+    shell:
+        "gzip -cd {input} | sed -e '2~4s/\([^ACGTacgt]\)/N/g' > {output}"
+
+
+rule limit_fastq:
+    input:
+        "{prefix}/{reads}.fastq"
+    output:
+        "{prefix}/{reads}_{limit}.fastq"
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+",
+        limit="\d+"
+    params:
+        lines=lambda wildcards: 4 * int(wildcards.limit)
+    shell:
+        "cat {input} | head -n {params.lines} > {output}"
+
+rule split_fastq:
+    input:
+        "{prefix}/{reads}_{limit}.fastq"
+    output:
+        temp(expand("{{prefix}}/{{reads}}_{{limit}}#{part}.fastq",
+                    part=make_parts(config.get("parts", 1))))
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+",
+        limit="\d+"
+    params:
+        lines=lambda wildcards: int(4 * ceil(int(wildcards.limit) / config.get("parts", 1))),
+        suffixlen=lambda wildcards: int(ceil(log10(config.get("parts", 1))))
+    shell:
+        "cat {input} | "
+        "split -l {params.lines} "
+        "--suffix-length={params.suffixlen} "
+        "--numeric-suffixes=0 "
+        "--additional-suffix=.fastq "
+        "- "
+        "{wildcards.prefix}/{wildcards.reads}_{wildcards.limit}#"

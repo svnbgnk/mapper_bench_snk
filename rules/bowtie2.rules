@@ -1,0 +1,36 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+
+rule bowtie2_index:
+    input:
+        "{prefix}.fasta"
+    output:
+        touch("{prefix}.bowtie2")
+    log:
+        "{prefix}.bowtie2.index.log"
+    params:
+        misc=config["indexers"]["bowtie2"]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/bowtie2-build {params.misc} {input} {output} 2> {log}"
+
+
+rule bowtie2_map_se:
+    input:
+        idx="{prefix}/{reference}.bowtie2",
+        fq="{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+"
+    output:
+        "{prefix}/{reads}.{reference}.bowtie2_{config}.bam"
+    log:
+        "{prefix}/{reads}.{reference}.bowtie2_{config}.bam.log"
+    threads:
+        config.get("threads", 1)
+    params:
+        lambda wildcards: config["mappers"]["bowtie2_" + wildcards.config]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/bowtie2 -x {input.idx} -U {input.fq} {params} --rg-id none --rg SM:none 2> {log} | "
+        "./bin/samtools view -@ {threads} -bS - > {output} "

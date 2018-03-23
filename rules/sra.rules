@@ -1,0 +1,85 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+from snakemake.utils import linecount
+
+from math import log10, ceil
+
+def make_parts(p):
+    return [str(x).zfill(int(ceil(log10(p)))) for x in range(0, p)]
+
+
+from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
+FTP = FTPRemoteProvider()
+
+
+rule sra_download:
+    input:
+        lambda wildcards: FTP.remote(config["sra"][wildcards.reads],
+                                     insecure=True, keep_local=False)
+    output:
+        "{prefix}/{reads}.sra"
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+"
+    shell:
+        "mv {input} {output}"
+
+
+rule sra_to_fastq_se:
+    input:
+        "{prefix}/{reads}.sra"
+    output:
+        "{prefix}/{reads}_se.fastq.gz"
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+"
+    shell:
+        "fastq-dump -I --split-spot --gzip {input} --outdir {wildcards.prefix} && "
+        "mv {wildcards.prefix}/{wildcards.reads}.fastq.gz {output}"
+
+
+rule sra_to_fastq_pe:
+    input:
+        "{prefix}/{reads}.sra"
+    output:
+        "{prefix}/{reads}_1.fastq.gz",
+        "{prefix}/{reads}_2.fastq.gz"
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+"
+    shell:
+        "fastq-dump -I --split-files --gzip {input} --outdir {wildcards.prefix}"
+
+
+rule limit_fastq:
+    input:
+        "{prefix}/{reads}_se.fastq.gz"
+    output:
+        "{prefix}/{reads}_{limit}_se.fastq.gz"
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+",
+        limit="\d+"
+    params:
+        lines=lambda wildcards: 4 * int(wildcards.limit)
+    shell:
+        "gzip -cd {input} | head -n {params.lines} | gzip -c > {output} || :"
+
+
+rule split_fastq:
+    input:
+        "{prefix}/{reads}_{limit}_{suffix}.fastq.gz"
+    output:
+        temp(expand("{{prefix}}/{{reads}}_{{limit}}_{{suffix}}#{part}.fastq",
+                    part=make_parts(config.get("parts", 1))))
+    wildcard_constraints:
+        reads="[a-zA-Z0-9]+",
+        limit="\d+"
+    params:
+        lines=lambda wildcards: int(4 * ceil(int(wildcards.limit) / config.get("parts", 1))),
+        suffixlen=lambda wildcards: int(ceil(log10(config.get("parts", 1))))
+    shell:
+        "gzip -cd {input} | "
+        "split -l {params.lines} "
+        "--suffix-length={params.suffixlen} "
+        "--numeric-suffixes=0 "
+        "--additional-suffix=.fastq "
+        "- "
+        "{wildcards.prefix}/{wildcards.reads}_{wildcards.limit}_{wildcards.suffix}#"

@@ -1,0 +1,67 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+
+__author__ = "Johannes Köster (http://johanneskoester.bitbucket.org)"
+__license__ = "MIT"
+
+
+rule bam_index:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.bam.bai"
+    shell:
+        "samtools index {input}"
+
+rule bam_sort_coord:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.coord.bam"
+    params:
+        n_threads=config["num_threads"],
+    shell:
+        "samtools sort -@ {params.n_threads} {input} -o {wildcards.prefix}.coord.bam"
+
+
+rule bam_sort_name:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.qname.bam"
+    params:
+        n_threads=config["num_threads"],
+    shell:
+        "samtools sort -@ {params.n_threads} -n {input} -o {wildcards.prefix}.qname.bam"
+
+
+# rule sam_to_bam:
+#    input:
+#        "{prefix}.sam"
+#    output:
+#        "{prefix}.bam"
+#     params:
+#         n_threads=config["num_threads"],
+#    shell:
+#        "samtools view -@ {params.n_threads} -Sbh {input} > {output}"
+
+
+rule bam_stats:
+    input:
+        bam="{prefix}.bam",
+        bai="{prefix}.bam.bai"
+    output:
+        "{prefix}.stats.txt"
+    shell:
+        "samtools idxstats {input.bam} > {output}"
+
+
+rule fasta_index:
+    input:
+        "{prefix}.{suffix}"
+    output:
+        "{prefix}.{suffix,(fasta|fa)}.fai"
+    shell:
+        "samtools faidx {input}"
+

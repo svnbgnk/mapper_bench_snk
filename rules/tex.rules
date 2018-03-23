@@ -1,0 +1,76 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+rule rabema_resources:
+    input:
+        "{prefix}.log"
+    output:
+        "{prefix}.res"
+    shell:
+        "echo -e 'wc_time\\trss_mem_peak\\tperc_cpu' > {output}; "
+        "grep ^RES {input} | awk -F ':' '{{ print $2 }}' >> {output}"
+
+rule rabema_table:
+    input:
+        rabema=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}.{{errors}}.{{category}}.rabema_report_tsv",
+               mapper=config["mappers"].keys()),
+        resources=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}.bam.res",
+               mapper=config["mappers"].keys()),
+        rabema2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{bin_size}.{{errors}}.{{category}}.rabema_report_tsv",
+                mapper=config["dmappers"].keys(),
+                meth=config["bin_methods"].keys(),
+                bin_size=config["bin_sizes"].keys()),
+        resources2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{bin_size}.bam.res",
+                mapper=config["dmappers"].keys(),
+                meth=config["bin_methods"].keys(),
+                bin_size=config["bin_sizes"].keys())
+    output:
+        "{prefix}/{reads}_{limit}.{reference}.{errors}.{category}.tab"
+    script:
+        "../scripts/rabema_tex.R"
+
+
+
+rule indexer_table:
+    input:
+        std_index_res=expand("{{prefix}}/{{reference}}.{indexer}.index.res",
+                indexer=config["indexers"].keys()),
+        dis_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{bin_size}.index.res",
+                indexer=config["dindexers"].keys(),
+                meth=config["bin_methods"].keys(),
+                bin_size=config["bin_sizes"].keys()),
+        dis_index_res2=expand("{{prefix}}/{{reference}}.distyara_{meth}_{bin_size}.index.res",
+                meth=config["bin_methods"].keys(),
+                bin_size=config["bin_sizes"].keys()),
+        ibf_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{bin_size}.ibf.res",
+                indexer=config["ibf_indexers"].keys(),
+                meth=config["bin_methods"].keys(),
+                bin_size=config["bin_sizes"].keys())
+    output:
+        "{prefix}/{reference}.tab"
+    script:
+        "../scripts/indexer_tex.R"
+
+rule tab_to_tex:
+    input:
+        "{prefix}.tab"
+    output:
+        "{prefix}.tex"
+    params:
+        base=lambda wildcards: os.path.basename(wildcards.prefix)
+    shell:
+        "sed 's|%TABLE%|{params.base}.tab|' scripts/table.tex > {output}"
+
+
+rule tex_to_pdf:
+    input:
+        "{prefix}.tex"
+    output:
+        "{prefix}.pdf"
+    params:
+        dir=lambda wildcards: os.path.dirname(wildcards.prefix),
+        base=lambda wildcards: os.path.basename(wildcards.prefix)
+    shell:
+        "cd {params.dir} && "
+        "xelatex {params.base}.tex && "
+        "rm {params.base}.{{aux,log}}"

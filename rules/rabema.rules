@@ -1,0 +1,52 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+
+from math import log10, ceil
+
+def make_parts(p):
+    return [str(x).zfill(int(ceil(log10(p)))) for x in range(0, p)]
+rule rabema_prepare:
+    input:
+        temp("{prefix}.razers3_gold_unprep.qname.bam")
+    output:
+        temp("{prefix}.razers3_gold_prep.bam")
+    shell:
+        "./bin/rabema_prepare_sam -i {input} -o {output}"
+
+
+rule rabema_gold:
+    input:
+        ref="{prefix}/{reference}.fasta",
+        bam="{prefix}/{reads}.{reference}.razers3_gold_prep.coord.bam"
+    output:
+        protected("{prefix}/{reads}.{reference}.{errors}.gsi.gz")
+    wildcard_constraints:
+        reads="[A-Za-z0-9_]+"
+    log:
+        "{prefix}/{reads}.{reference}.{errors}.gsi.log"
+    shell:
+        "./bin/rabema_build_gold_standard "
+        "--max-error {wildcards.errors} --distance-metric edit "
+        "--reference {input.ref} --in-bam {input.bam} "
+        "--out-gsi {output} "
+        "2> {log}"
+
+
+rule rabema_eval:
+    input:
+        ref="{prefix}/{reference}.fasta",
+        bam="{prefix}/{reads}.{reference}.{mapper}.qname.bam",
+        gsi="{prefix}/{reads}.{reference}.{errors}.gsi.gz"
+    output:
+        "{prefix}/{reads}.{reference}.{mapper}.{errors}.{category}.rabema_report_tsv"
+    log:
+        "{prefix}/{reads}.{reference}.{mapper}.{errors}.{category}.rabema_report_tsv.log"
+    shell:
+        "./bin/rabema_evaluate --DONT-PANIC "
+        "--max-error {wildcards.errors} --distance-metric edit --benchmark-category {wildcards.category} "
+        "--trust-NM --extra-pos-tag XP "
+        "--reference {input.ref} --in-bam {input.bam} --in-gsi {input.gsi} "
+        "--out-tsv {output} 2> {log}"
+
+

@@ -1,0 +1,37 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
+FTP = FTPRemoteProvider()
+# rule refs_download:
+#     input:
+#         lambda wildcards: FTP.remote(config["genbank"][wildcards.reference],
+#                                      insecure=True, keep_local=False)
+#     output:
+#         "{prefix}/{reference}.fasta"
+#     shell:
+#         "gzip -cd {input} | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {output}"
+
+rule refs_download_bins:
+    wildcard_constraints:
+        meth="[taxoCKKTAXOckk]+",
+        bin_size="\d+"
+    input:
+        lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.bin_size],
+                                     insecure=True, keep_local=False)
+    output:
+        touch("{prefix}/{reference}_{meth}_{bin_size}/ref_0-{bin_size}")
+    params:
+        comb="{prefix}/{reference}.fasta",
+        b_size="{bin_size}",
+        in_dir="{reference}_{meth}_{bin_size}/",
+        out_dir="{prefix}/{reference}_{meth}_{bin_size}/"
+    shell:
+        "tar -zxvf {input}; "
+        "touch {params.comb}; "
+        "bin=0; "
+        "while [ $bin -lt {params.b_size} ]; do "
+        "   cat {params.in_dir}$bin.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}$bin.fasta; "
+        "   cat {params.out_dir}$bin.fasta >> {params.comb}; "
+        "   bin=$((bin+1)); "
+        "done; "
+        "rm -rf {params.in_dir} ; "

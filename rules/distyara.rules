@@ -1,0 +1,49 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+rule dist_yara_index_fm:
+    input:
+        "{prefix}.dyara_{meth}_{bin_size}.index.log"
+    output:
+        "{prefix}.distyara_{meth}_{bin_size}.index.log",
+    params:
+        idir="{prefix}_{meth}_{bin_size}/",
+    shell:
+        "cp {input} {output};"
+
+rule dist_yara_map_se:
+    input:
+        log="{prefix}/{reference}.distyara_{meth}_{bin_size}.index.log",
+        rd="{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+",
+        bin_size="[0-9]+"
+    output:
+        "{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{bin_size}.bam"
+    log:
+        "{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{bin_size}.bam.log"
+    params:
+        indexer_log="{prefix}/{reference}.distyara_{meth}_{bin_size}.index.log",
+        n_threads=config["num_threads"],
+        o_prefix="{prefix}/temp.{reads}_{limit}.{reference}.distyara_{config}_{meth}_{bin_size}",
+        b_size="{bin_size}",
+        index_dir="{prefix}/{reference}.dyara_{meth}_{bin_size}.indices/",
+        misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config]
+    shell:
+        "echo '"
+        "\nbin=1; "
+        "\n./bin/yara_mapper {params.misc} -o {params.o_prefix}0.bam {params.index_dir}0 {input.rd}; "
+        "\nsamtools view -b -F 4 {params.o_prefix}0.bam > {output}; "
+        "\nrm {params.o_prefix}0.bam"         
+        "\nwhile [ $bin -lt {params.b_size} ]; do "
+        "\n\techo processed bin $bin of {params.b_size}; "
+        "\n\t./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
+        "\n\tsamtools view -b -F 4 {params.o_prefix}$bin.bam > {params.o_prefix}.current.temp.bam; "
+        "\n\tmv {output} {output}.tmp.bam; " 
+        "\n\tsamtools merge -@ {params.n_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
+        "\n\trm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
+        "\n\tbin=$((bin+1));"
+        "\ndone;"
+        "\n' > {params.o_prefix}.sh; "
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "bash {params.o_prefix}.sh &> {log}; "
+        "rm {params.o_prefix}.sh;"

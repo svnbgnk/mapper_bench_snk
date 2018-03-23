@@ -1,0 +1,58 @@
+{
+    "genbank": {
+        "A_B_refseq_20170926_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/A_B_refseq_20170926_taxo_1024.tar.gz",
+        "A_B_refseq_sample_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/A_B_refseq_sample_taxo_1024.tar.gz",
+        "GRCh38": "ftp.ncbi.nlm.nih.gov/genomes/genbank/vertebrate_mammalian/Homo_sapiens/all_assembly_versions/GCA_000001405.24_GRCh38.p9/GCA_000001405.24_GRCh38.p9_genomic.fna.gz",
+        "Ecoli_K12_MG1655": "ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/Escherichia_coli/all_assembly_versions/GCA_000005845.2_ASM584v2/GCA_000005845.2_ASM584v2_genomic.fna.gz"
+    },
+    "fastq": {
+        "ABSim": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/ABSim.fastq.gz",
+        "ABSim100K": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/ABSim100K.fastq.gz",
+        "ERR161544": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR161/ERR161544/ERR161544.sra",
+        "ERR008613": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR008/ERR008613/ERR008613.sra"
+    },
+    "jobs": [
+        ["A_B_refseq_sample", "taxo", 1024, "ABSim100K", 1000]
+    ],
+    "jobs_DISABLED": [
+        ["A_B_refseq_20170926", "taxo", 1024, "ABSim", 10000]
+    ],
+    "gmappers": {
+        "razers3_rabema": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000"
+    },
+
+    "mappers": {
+        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
+        "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
+        "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
+        "bwamem_rabema": "-a"
+    },
+
+    "dmappers": {
+        "distyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
+        "dyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
+    },
+    "indexers": {
+        "yara": "--version-check OFF -v",
+        "bowtie2": "--threads 8",
+        "gem": "--threads 8",
+        "bwa": "-a bwtsw"
+    },
+    "dindexers": {
+        "dyara": "--version-check OFF -v --threads 8"
+    },
+    "ibf_indexers": {
+        "dyara": "--version-check OFF -v --kmer-size 19 -ft bloom --bloom-size 16 --num-hash 3 --threads 8"
+    },
+    "bin_sizes": {
+        "1024": 1024
+    },
+    "bin_methods": {
+        "taxo": "taxo"
+    },
+    "razers3_gold_param": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000",
+    "num_threads": 8,  
+    "parts": 32,  
+    "bigFasta": "A_B_refseq_20170926.fna.gz",
+    "bigIndexPref": "A_B_refseq_20170926"
+}

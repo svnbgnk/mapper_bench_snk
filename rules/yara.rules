@@ -1,0 +1,32 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+
+rule yara_index:
+    input:
+        "{prefix}.fasta"
+    output:
+        touch("{prefix}.yara")
+    log:
+        "{prefix}.yara.index.log"
+    params:
+        misc=config["indexers"]["yara"]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/yara_indexer {params.misc} {input} -o {output} 2> {log}"
+
+rule yara_map_se:
+    input:
+        "{prefix}/{reference}.yara",
+        "{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+"
+    output:
+        "{prefix}/{reads}_{limit}.{reference}.yara_{config}.bam"
+    log:
+        "{prefix}/{reads}_{limit}.{reference}.yara_{config}.bam.log"
+    params:
+        misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/yara_mapper {params.misc} -o {output} {input} 2> {log}"

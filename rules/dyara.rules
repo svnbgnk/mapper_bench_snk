@@ -1,0 +1,51 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+rule dream_yara_index_ibf:
+    input:
+        "{prefix}_{meth}_{bin_size}/ref_0-{bin_size}"
+    output:
+        "{prefix}.{indexer}_{meth}_{bin_size}.filter"
+    wildcard_constraints:
+        bin_size="\d+."
+    params:
+        bs="{bin_size}",
+        idir="{prefix}_{meth}_{bin_size}/",
+        misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
+    log:
+        "{prefix}.dyara_{meth}_{bin_size}.ibf.log",
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/yara_build_filter -b {params.bs} {params.misc} -o {output} {params.idir} 2> {log};"
+
+rule dream_yara_index_fm:
+    input:
+        "{prefix}_{meth}_{bin_size}/ref_0-{bin_size}"
+    output:
+        log="{prefix}.dyara_{meth}_{bin_size}.index.log",
+        odir="{prefix}.dyara_{meth}_{bin_size}.indices/"
+    params:
+        idir="{prefix}_{meth}_{bin_size}/",
+        misc=config["dindexers"]["dyara"]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/yara_indexer_dis {params.misc} -o {output.odir} {params.idir}/*.fasta &> {output.log}; "
+
+rule dream_yara_map_se:
+    input:
+        fltr="{prefix}/{reference}.dyara_{meth}_{bin_size}.filter",
+        fm="{prefix}/{reference}.dyara_{meth}_{bin_size}.index.log",
+        rd="{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+"
+    output:
+        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{bin_size}.bam"
+    log:
+        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{bin_size}.bam.log"
+    params:
+        idir="{prefix}/{reference}.dyara_{meth}_{bin_size}.indices/",
+        misc=lambda wildcards: config["dmappers"]["dyara_" + wildcards.config]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/yara_mapper_dis {params.misc} -o {output} -fi {input.fltr} {params.idir} {input.rd} 2> {log}; "
+        # "samtools view -h s.bam | grep -v 'LN:76'| samtools view -bS - > {output}; rm s.bam"

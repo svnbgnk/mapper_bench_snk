@@ -1,0 +1,33 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+rule gem_index:
+    input:
+        "{prefix}.fasta"
+    output:
+        touch("{prefix}.gem")
+    log:
+        "{prefix}.gem.index.log"
+    params:
+        misc=config["indexers"]["gem"]
+    shell:
+        "export PATH=$PATH:`realpath bin`; "
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/gem-indexer {params.misc} -i {input} -o {output} 2> {log}"
+
+rule gem_map_se:
+    input:
+        idx="{prefix}/{reference}.gem",
+        fq="{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+"
+    output:
+        "{prefix}/{reads}_{limit}.{reference}.gem_{config}.bam"
+    log:
+        "{prefix}/{reads}_{limit}.{reference}.gem_{config}.bam.log"
+    params:
+        misc=lambda wildcards: config["mappers"]["gem_" + wildcards.config]
+    shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/gem-mapper {params.misc} -I {input.idx}.gem -i {input.fq}  2> {log} | "
+        "./bin/gem-2-sam --threads 8 --quality-format offset-33 --sequence-lengths --index {input.idx}.gem --expect-single-end-reads | " 
+        "./bin/samtools view -@ {threads} -bS - > {output}"
