@@ -52,7 +52,7 @@ MAPPERS_LABEL = c(
     gem_rabema="GEM"
 )
 INDEXER_LABEL = c(
-    yara="Yara && ",
+    yara="Yara",
     dyara_taxo_1024="Dream Yara",
     dyara_taxo_256 ="Dream Yara",
     dyara_taxo_64  ="Dream Yara",
