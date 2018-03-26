@@ -30,7 +30,7 @@ rule didabwa_map_se:
     params:
         bin_size="1024",
         num_threads=config["num_threads"],
-        index_dir="{prefix}_didabwa.dir/",
+        index_dir="{prefix}/{reads}_{limit}.{reference}.didabwa.dir/",
         misc=lambda wildcards: config["mappers"]["didabwa_" + wildcards.config]
     shell:
         "cd {params.index_dir}; "
