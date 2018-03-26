@@ -41,4 +41,3 @@ rule didabwa_map_se:
         "seq {params.bin_size} | xargs -P 8 -I {{}} sh -c \" ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" && "
         "../../bin/mrg -p {params.bin_size} -a bwa -m fast '  > ../../{log} 2>&1 &&  "
         "../../bin/samtools view -@ {params.num_threads} -bS aln.sam > ../../{output} "
-q
