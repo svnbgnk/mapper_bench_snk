@@ -44,7 +44,7 @@ rule dist_yara_map_se:
         "samtools merge -@ {params.n_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
         "rm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
         "bin=$((bin+1));"
-        "done; ' &> {log} "
+        "done ' > {log} 2>&1 "
 
         # "cp {params.tmp_bam}.log {log}; cp {params.tmp_bam} {output};"
 
