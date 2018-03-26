@@ -34,5 +34,5 @@ rule dist_yara_map_se:
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c 'seq 0 $(({params.num_bins}-1)) | xargs -I {{}} "
         "sh -c \" ./bin/yara_mapper {params.misc}  -o {params.out_dir}{{}}.bam {params.index_dir}{{}} {input.rd} > {params.out_dir}{{}}.log 2>&1 \" ' > {log} 2>&1 ;"
-        "seq 0 $(({params.num_bins}-1)) | xargs -I {} ./bin/samtools view -H {params.out_dir}{{}}.bam | grep @SQ | awk -F\":|\\t\" '{print $3\"\\t\"$5}' > header.h; "
-        "seq 0 $(({params.num_bins}-1)) | xargs -I {} ./bin/samtools view -@ {params.num_threads} -F 4 {params.out_dir}{{}}.bam | ./bin/samtools view -b -t header.h - > {output}"
+        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} ./bin/samtools view -H {params.out_dir}{{}}.bam | grep @SQ | awk -F\":|\\t\" '{print $3\"\\t\"$5}' > header.h; "
+        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} ./bin/samtools view -@ {params.num_threads} -F 4 {params.out_dir}{{}}.bam | ./bin/samtools view -b -t header.h - > {output}"

@@ -9,7 +9,7 @@ rule bwa_index:
         "{prefix}.bwa.index.log"
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/bwa index -a bwtsw -p {output} {input} 2> {log}"
+        "./bin/bwa index -a bwtsw -p {output} {input} > {log}  2>&1 "
 
 
 rule bwamem_map_se:

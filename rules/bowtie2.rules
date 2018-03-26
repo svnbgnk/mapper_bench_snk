@@ -13,7 +13,7 @@ rule bowtie2_index:
         misc=config["indexers"]["bowtie2"]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/bowtie2-build {params.misc} {input} {output} 2> {log}"
+        "./bin/bowtie2-build {params.misc} {input} {output} > {log} 2>&1 "
 
 
 rule bowtie2_map_se:
