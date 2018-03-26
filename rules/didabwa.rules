@@ -7,7 +7,7 @@ rule didabwa_index_fm:
         log="{prefix}.didabwa.index.log",
         outdir="{prefix}_didabwa.index/"
     params:
-        n_threads=config["num_threads"],
+        num_threads=config["num_threads"],
         bin_size="1024"
     shell:
         "mkdir {output.outdir}; cd {output.outdir} "
@@ -29,7 +29,7 @@ rule didabwa_map_se:
         "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.log"
     params:
         bin_size="1024",
-        n_threads=config["num_threads"],
+        num_threads=config["num_threads"],
         index_dir="{prefix}.didabwa.index/",
         misc=lambda wildcards: config["mappers"]["didabwa_" + wildcards.config]
     shell:
