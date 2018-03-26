@@ -22,7 +22,8 @@
     },
 
     "mappers": {
-        "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se "
+        "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se ",
+        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
     },
 
     "mappers_bkp": {
