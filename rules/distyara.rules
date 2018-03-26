@@ -30,6 +30,24 @@ rule dist_yara_map_se:
         misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config],
         tmp_bam="{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{bin_size}.bam",
     shell:
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "sh -c '"
+        "bin=1; "
+        "./bin/yara_mapper {params.misc} -o {params.o_prefix}0.bam {params.index_dir}0 {input.rd}; "
+        "samtools view -b -F 4 {params.o_prefix}0.bam > {output}; "
+        "rm {params.o_prefix}0.bam"         
+        "while [ $bin -lt {params.b_size} ]; do "
+        "echo processed bin $bin of {params.b_size}; "
+        "./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
+        "samtools view -b -F 4 {params.o_prefix}$bin.bam > {params.o_prefix}.current.temp.bam; "
+        "mv {output} {output}.tmp.bam; " 
+        "samtools merge -@ {params.n_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
+        "rm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
+        "bin=$((bin+1));"
+        "done; ' &> {log} "
+
+        # "cp {params.tmp_bam}.log {log}; cp {params.tmp_bam} {output};"
+
         # "echo '"
         # "\nbin=1; "
         # "\n./bin/yara_mapper {params.misc} -o {params.o_prefix}0.bam {params.index_dir}0 {input.rd}; "
@@ -48,4 +66,3 @@ rule dist_yara_map_se:
         # "command time -f 'RES:%e\\t%M\\t%P' "
         # "bash {params.o_prefix}.sh &> {log}; "
         # "rm {params.o_prefix}.sh;"
-        "cp {params.tmp_bam}.log {log}; cp {params.tmp_bam} {output};"
