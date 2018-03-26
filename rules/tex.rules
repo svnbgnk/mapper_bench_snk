@@ -16,14 +16,14 @@ rule rabema_table:
                mapper=config["mappers"].keys()),
         resources=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}.bam.res",
                mapper=config["mappers"].keys()),
-        rabema2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{bin_size}.{{errors}}.{{category}}.rabema_report_tsv",
+        rabema2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{num_bins}.{{errors}}.{{category}}.rabema_report_tsv",
                 mapper=config["dmappers"].keys(),
                 meth=config["bin_methods"].keys(),
-                bin_size=config["bin_sizes"].keys()),
-        resources2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{bin_size}.bam.res",
+                num_bins=config["num_bins"].keys()),
+        resources2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{num_bins}.bam.res",
                 mapper=config["dmappers"].keys(),
                 meth=config["bin_methods"].keys(),
-                bin_size=config["bin_sizes"].keys())
+                num_bins=config["num_bins"].keys())
     output:
         "{prefix}/{reads}_{limit}.{reference}.{errors}.{category}.tab"
     script:
@@ -35,17 +35,17 @@ rule indexer_table:
     input:
         std_index_res=expand("{{prefix}}/{{reference}}.{indexer}.index.res",
                 indexer=config["indexers"].keys()),
-        dis_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{bin_size}.index.res",
+        dis_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{num_bins}.index.res",
                 indexer=config["dindexers"].keys(),
                 meth=config["bin_methods"].keys(),
-                bin_size=config["bin_sizes"].keys()),
-        dis_index_res2=expand("{{prefix}}/{{reference}}.distyara_{meth}_{bin_size}.index.res",
+                num_bins=config["num_bins"].keys()),
+        dis_index_res2=expand("{{prefix}}/{{reference}}.distyara_{meth}_{num_bins}.index.res",
                 meth=config["bin_methods"].keys(),
-                bin_size=config["bin_sizes"].keys()),
-        ibf_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{bin_size}.ibf.res",
+                num_bins=config["num_bins"].keys()),
+        ibf_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{num_bins}.ibf.res",
                 indexer=config["ibf_indexers"].keys(),
                 meth=config["bin_methods"].keys(),
-                bin_size=config["bin_sizes"].keys())
+                num_bins=config["num_bins"].keys())
     output:
         "{prefix}/{reference}.tab"
     script:
