@@ -35,7 +35,7 @@ rule dist_yara_map_se:
         "bin=1; "
         "./bin/yara_mapper {params.misc} -o {params.o_prefix}0.bam {params.index_dir}0 {input.rd}; "
         "samtools view -b -F 4 {params.o_prefix}0.bam > {output}; "
-        "rm {params.o_prefix}0.bam"         
+        "rm {params.o_prefix}0.bam; "         
         "while [ $bin -lt {params.b_size} ]; do "
         "echo processed bin $bin of {params.b_size}; "
         "./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
@@ -45,6 +45,14 @@ rule dist_yara_map_se:
         "rm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
         "bin=$((bin+1));"
         "done ' > {log} 2>&1 "
+
+
+        # "command time -f 'RES:%e\\t%M\\t%P' "
+        # "sh -c '../../bin/dsp -j {params.num_threads} -p {params.bin_size} {params.misc} reads.in && "
+        # "seq {params.bin_size} | xargs -P 8 -I {{}} sh -c \" ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" && "
+        # "../../bin/mrg -p {params.bin_size} -a bwa -m fast '  > ../../{log} 2>&1 &&  "
+        # "../../bin/samtools view -@ {params.num_threads} -bS aln.sam > ../../{output} "
+
 
         # "cp {params.tmp_bam}.log {log}; cp {params.tmp_bam} {output};"
 
