@@ -22,6 +22,10 @@
     },
 
     "mappers": {
+        "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se "
+    },
+
+    "mappers_bkp": {
         "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se ",
         "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
@@ -29,9 +33,11 @@
         "bwamem_rabema": "-a"
     },
 
-    "dmappers": {
+    "dmappers_bkp": {
         "distyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
         "dyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
+    },
+    "dmappers": {
     },
     "indexers": {
         "yara": "--version-check OFF -v",
