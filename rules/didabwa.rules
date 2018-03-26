@@ -8,12 +8,12 @@ rule didabwa_index_fm:
     params:
         outdir="{prefix}.didabwa.dir/",
         num_threads=config["num_threads"],
-        bin_size="1024"
+        num_bins="1024"
     shell:
         "mkdir -p {params.outdir}; cd {params.outdir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "sh -c '../../bin/prt -p {params.bin_size} ../../{input} && "
-        "seq {params.bin_size} | xargs -P {params.num_threads} -I {{}} "
+        "sh -c '../../bin/prt -p {params.num_bins} ../../{input} && "
+        "seq {params.num_bins} | xargs -P {params.num_threads} -I {{}} "
         "sh -c \"../../bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1\" '  >> ../../{output} 2>&1"
 
 
@@ -23,13 +23,13 @@ rule didabwa_map_se:
         read="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+",
-        bin_size="[0-9]+"
+        num_bins="[0-9]+"
     output:
         "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.bam"
     log:
         "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.log"
     params:
-        bin_size="1024",
+        num_bins="1024",
         num_threads=config["num_threads"],
         index_dir="{prefix}/{reference}.didabwa.dir/",
         misc=lambda wildcards: config["mappers"]["didabwa_" + wildcards.config]
@@ -37,7 +37,7 @@ rule didabwa_map_se:
         "cd {params.index_dir}; "
         "echo `realpath ../../{input.read}` > reads.in; "
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "sh -c '../../bin/dsp -j {params.num_threads} -p {params.bin_size} {params.misc} reads.in && "
-        "seq {params.bin_size} | xargs -P 8 -I {{}} sh -c \" ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" && "
-        "../../bin/mrg -p {params.bin_size} -a bwa -m fast '  > ../../{log} 2>&1 &&  "
+        "sh -c '../../bin/dsp -j {params.num_threads} -p {params.num_bins} {params.misc} reads.in && "
+        "seq {params.num_bins} | xargs -P 8 -I {{}} sh -c \" ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" && "
+        "../../bin/mrg -p {params.num_bins} -a bwa -m fast '  > ../../{log} 2>&1 &&  "
         "../../bin/samtools view -@ {params.num_threads} -bS aln.sam > ../../{output} "

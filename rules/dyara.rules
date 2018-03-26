@@ -3,29 +3,29 @@
 
 rule dream_yara_index_ibf:
     input:
-        "{prefix}_{meth}_{bin_size}/ref_0-{bin_size}"
+        "{prefix}_{meth}_{num_bins}/ref_0-{num_bins}"
     output:
-        "{prefix}.{indexer}_{meth}_{bin_size}.filter"
+        "{prefix}.{indexer}_{meth}_{num_bins}.filter"
     wildcard_constraints:
-        bin_size="\d+."
+        num_bins="\d+."
     params:
-        bs="{bin_size}",
-        idir="{prefix}_{meth}_{bin_size}/",
+        num_bins="{num_bins}",
+        idir="{prefix}_{meth}_{num_bins}/",
         misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
     log:
-        "{prefix}.dyara_{meth}_{bin_size}.ibf.log",
+        "{prefix}.dyara_{meth}_{num_bins}.ibf.log",
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/yara_build_filter -b {params.bs} {params.misc} -o {output} {params.idir} 2> {log};"
+        "./bin/yara_build_filter -b {params.num_bins} {params.misc} -o {output} {params.idir} 2> {log};"
 
 rule dream_yara_index_fm:
     input:
-        "{prefix}_{meth}_{bin_size}/ref_0-{bin_size}"
+        "{prefix}_{meth}_{num_bins}/ref_0-{num_bins}"
     output:
-        log="{prefix}.dyara_{meth}_{bin_size}.index.log",
-        odir="{prefix}.dyara_{meth}_{bin_size}.indices/"
+        log="{prefix}.dyara_{meth}_{num_bins}.index.log",
+        odir="{prefix}.dyara_{meth}_{num_bins}.indices/"
     params:
-        idir="{prefix}_{meth}_{bin_size}/",
+        idir="{prefix}_{meth}_{num_bins}/",
         misc=config["dindexers"]["dyara"]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
@@ -33,19 +33,19 @@ rule dream_yara_index_fm:
 
 rule dream_yara_map_se:
     input:
-        fltr="{prefix}/{reference}.dyara_{meth}_{bin_size}.filter",
-        fm="{prefix}/{reference}.dyara_{meth}_{bin_size}.index.log",
-        rd="{prefix}/{reads}.fastq"
+        ibf="{prefix}/{reference}.dyara_{meth}_{num_bins}.filter",
+        index="{prefix}/{reference}.dyara_{meth}_{num_bins}.index.log",
+        read="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"
     output:
-        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{bin_size}.bam"
+        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam"
     log:
-        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{bin_size}.bam.log"
+        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam.log"
     params:
-        idir="{prefix}/{reference}.dyara_{meth}_{bin_size}.indices/",
+        idir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["dmappers"]["dyara_" + wildcards.config]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/yara_mapper_dis {params.misc} -o {output} -fi {input.fltr} {params.idir} {input.rd} 2> {log}; "
+        "./bin/yara_mapper_dis {params.misc} -o {output} -fi {input.ibf} {params.idir} {input.read} 2> {log}; "
         # "samtools view -h s.bam | grep -v 'LN:76'| samtools view -bS - > {output}; rm s.bam"

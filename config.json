@@ -52,7 +52,7 @@
     "ibf_indexers": {
         "dyara": "--version-check OFF -v --kmer-size 19 -ft bloom --bloom-size 4 --num-hash 3 --threads 8"
     },
-    "bin_sizes": {
+    "num_bins": {
         "1024": 1024
     },
     "bin_methods": {
