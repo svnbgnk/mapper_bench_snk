@@ -32,8 +32,7 @@ rule dist_yara_map_se:
     shell:
         "mkdir -p {params.out_dir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "sh -c '../../bin/dsp -j {params.num_threads} -p {params.num_bins} {params.misc} reads.in && "
-        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} "
+        "sh -c 'seq 0 $(({params.num_bins}-1)) | xargs -I {{}} "
         "sh -c \" ./bin/yara_mapper {params.misc}  -o {params.out_dir}{{}}.bam {params.index_dir}{{}} {input.rd} > {params.out_dir}{{}}.log 2>&1 \" ' > {log} 2>&1 ;"
         "cp {params.out_dir}0.bam {output} "
 
