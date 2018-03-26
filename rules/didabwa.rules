@@ -19,7 +19,7 @@ rule didabwa_index_fm:
 rule didabwa_map_se:
     input:
         log="{prefix}/{reference}.didabwa.index.log",
-        rd="{prefix}/{reads}.fastq"
+        read="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+",
         bin_size="[0-9]+"
