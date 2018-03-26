@@ -26,11 +26,10 @@ rule bowtie2_map_se:
         "{prefix}/{reads}.{reference}.bowtie2_{config}.bam"
     log:
         "{prefix}/{reads}.{reference}.bowtie2_{config}.bam.log"
-    threads:
-        config.get("threads", 1)
     params:
-        lambda wildcards: config["mappers"]["bowtie2_" + wildcards.config]
+        num_threads=config["num_threads"],
+        misc=lambda wildcards: config["mappers"]["bowtie2_" + wildcards.config]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/bowtie2 -x {input.idx} -U {input.fq} {params} --rg-id none --rg SM:none 2> {log} | "
-        "./bin/samtools view -@ {threads} -bS - > {output} "
+        "./bin/bowtie2 -x {input.idx} -U {input.fq} {params.misc} --rg-id none --rg SM:none 2> {log} | "
+        "./bin/samtools view -@ {params.num_threads} -bS - > {output} "
