@@ -30,7 +30,7 @@ rule dist_yara_map_se:
         misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config],
         tmp_bam="{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam",
     shell:
-        "mkdir -p out_dir "
+        "mkdir -p out_dir; "
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/dsp -j {params.num_threads} -p {params.num_bins} {params.misc} reads.in && "
         "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} "
