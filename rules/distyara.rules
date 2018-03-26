@@ -24,31 +24,32 @@ rule dist_yara_map_se:
     params:
         indexer_log="{prefix}/{reference}.distyara_{meth}_{num_bins}.index.log",
         num_threads=config["num_threads"],
-        o_prefix="{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{num_bins}/",
+        out_dir="{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{num_bins}/",
         num_bins="{num_bins}",
         index_dir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config],
         tmp_bam="{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam",
     shell:
+        "mkdir -p out_dir "
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/dsp -j {params.num_threads} -p {params.num_bins} {params.misc} reads.in && "
         "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} "
-        "sh -c \" ./bin/yara_mapper {params.misc}  -o {params.o_prefix}{{}}.bam {params.index_dir}{{}} {input.rd} > {params.o_prefix}{{}}.log 2>&1 \" ' > {log} 2>&1 ;"
-        "cp {params.o_prefix}0.bam {output} "
+        "sh -c \" ./bin/yara_mapper {params.misc}  -o {params.out_dir}{{}}.bam {params.index_dir}{{}} {input.rd} > {params.out_dir}{{}}.log 2>&1 \" ' > {log} 2>&1 ;"
+        "cp {params.out_dir}0.bam {output} "
 
         # "command time -f 'RES:%e\\t%M\\t%P' "
         # "sh -c '"
         # "bin=1; "
-        # "./bin/yara_mapper {params.misc} -o {params.o_prefix}0.bam {params.index_dir}0 {input.rd}; "
-        # "samtools view -b -F 4 {params.o_prefix}0.bam > {output}; "
-        # "rm {params.o_prefix}0.bam; "         
+        # "./bin/yara_mapper {params.misc} -o {params.out_dir}0.bam {params.index_dir}0 {input.rd}; "
+        # "samtools view -b -F 4 {params.out_dir}0.bam > {output}; "
+        # "rm {params.out_dir}0.bam; "         
         # "while [ $bin -lt {params.num_bins} ]; do "
         # "echo processed bin $bin of {params.num_bins}; "
-        # "./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
-        # "samtools view -b -F 4 {params.o_prefix}$bin.bam > {params.o_prefix}.current.temp.bam; "
+        # "./bin/yara_mapper {params.misc} -o {params.out_dir}$bin.bam {params.index_dir}$bin {input.rd}; "
+        # "samtools view -b -F 4 {params.out_dir}$bin.bam > {params.out_dir}.current.temp.bam; "
         # "mv {output} {output}.tmp.bam; " 
-        # "samtools merge -@ {params.num_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
-        # "rm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
+        # "samtools merge -@ {params.num_threads} {output} {output}.tmp.bam {params.out_dir}.current.temp.bam; "
+        # "rm {output}.tmp.bam {params.out_dir}.current.temp.bam {params.out_dir}$bin.bam; " 
         # "bin=$((bin+1));"
         # "done; ' > {log} 2>&1 "
 
@@ -57,19 +58,19 @@ rule dist_yara_map_se:
 
         # "echo '"
         # "\nbin=1; "
-        # "\n./bin/yara_mapper {params.misc} -o {params.o_prefix}0.bam {params.index_dir}0 {input.rd}; "
-        # "\nsamtools view -b -F 4 {params.o_prefix}0.bam > {output}; "
-        # "\nrm {params.o_prefix}0.bam"         
+        # "\n./bin/yara_mapper {params.misc} -o {params.out_dir}0.bam {params.index_dir}0 {input.rd}; "
+        # "\nsamtools view -b -F 4 {params.out_dir}0.bam > {output}; "
+        # "\nrm {params.out_dir}0.bam"         
         # "\nwhile [ $bin -lt {params.num_bins} ]; do "
         # "\n\techo processed bin $bin of {params.num_bins}; "
-        # "\n\t./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
-        # "\n\tsamtools view -b -F 4 {params.o_prefix}$bin.bam > {params.o_prefix}.current.temp.bam; "
+        # "\n\t./bin/yara_mapper {params.misc} -o {params.out_dir}$bin.bam {params.index_dir}$bin {input.rd}; "
+        # "\n\tsamtools view -b -F 4 {params.out_dir}$bin.bam > {params.out_dir}.current.temp.bam; "
         # "\n\tmv {output} {output}.tmp.bam; " 
-        # "\n\tsamtools merge -@ {params.num_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
-        # "\n\trm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
+        # "\n\tsamtools merge -@ {params.num_threads} {output} {output}.tmp.bam {params.out_dir}.current.temp.bam; "
+        # "\n\trm {output}.tmp.bam {params.out_dir}.current.temp.bam {params.out_dir}$bin.bam; " 
         # "\n\tbin=$((bin+1));"
         # "\ndone;"
-        # "\n' > {params.o_prefix}.sh; "
+        # "\n' > {params.out_dir}.sh; "
         # "command time -f 'RES:%e\\t%M\\t%P' "
-        # "bash {params.o_prefix}.sh &> {log}; "
-        # "rm {params.o_prefix}.sh;"
+        # "bash {params.out_dir}.sh &> {log}; "
+        # "rm {params.out_dir}.sh;"
