@@ -23,7 +23,7 @@ rule dist_yara_map_se:
         "{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{bin_size}.bam.log"
     params:
         indexer_log="{prefix}/{reference}.distyara_{meth}_{bin_size}.index.log",
-        n_threads=config["num_threads"],
+        num_threads=config["num_threads"],
         o_prefix="{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{bin_size}/",
         b_size="{bin_size}",
         index_dir="{prefix}/{reference}.dyara_{meth}_{bin_size}.indices/",
@@ -47,7 +47,7 @@ rule dist_yara_map_se:
         # "./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
         # "samtools view -b -F 4 {params.o_prefix}$bin.bam > {params.o_prefix}.current.temp.bam; "
         # "mv {output} {output}.tmp.bam; " 
-        # "samtools merge -@ {params.n_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
+        # "samtools merge -@ {params.num_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
         # "rm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
         # "bin=$((bin+1));"
         # "done; ' > {log} 2>&1 "
@@ -65,7 +65,7 @@ rule dist_yara_map_se:
         # "\n\t./bin/yara_mapper {params.misc} -o {params.o_prefix}$bin.bam {params.index_dir}$bin {input.rd}; "
         # "\n\tsamtools view -b -F 4 {params.o_prefix}$bin.bam > {params.o_prefix}.current.temp.bam; "
         # "\n\tmv {output} {output}.tmp.bam; " 
-        # "\n\tsamtools merge -@ {params.n_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
+        # "\n\tsamtools merge -@ {params.num_threads} {output} {output}.tmp.bam {params.o_prefix}.current.temp.bam; "
         # "\n\trm {output}.tmp.bam {params.o_prefix}.current.temp.bam {params.o_prefix}$bin.bam; " 
         # "\n\tbin=$((bin+1));"
         # "\ndone;"
