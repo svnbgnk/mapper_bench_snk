@@ -10,7 +10,7 @@ rule didabwa_index_fm:
         num_threads=config["num_threads"],
         bin_size="1024"
     shell:
-        "mkdir {output.outdir}; cd {output.outdir}; "
+        "cd {output.outdir}; "
         "command time -f 'RES:%e\\t%M\\t%P' -p "
         "sh -c './bin/prt -p {params.bin_size} {input}  > {output.log} 2>&1 && "
         "seq {params.bin_size} | xargs -P {params.num_threads} -I {{}} sh -c \"./bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1\" >> {output.log} 2>&1' "
