@@ -21,6 +21,7 @@ include: "rules/tex.rules"
 
 include: "rules/razers3.rules"
 
+include: "rules/didabwa.rules"
 include: "rules/yara.rules"
 include: "rules/dyara.rules"
 include: "rules/distyara.rules"

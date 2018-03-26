@@ -1,0 +1,42 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+rule didabwa_index_fm:
+    input:
+        "{prefix}.fasta"
+    output:
+        log="{prefix}.didabwa.index.log",
+        outdir="{prefix}_didabwa.index/"
+    params:
+        n_threads=config["num_threads"],
+        bin_size="1024"
+    shell:
+        "mkdir {output.outdir}; cd {output.outdir} "
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "(./bin/prt -p {params.bin_size} {input}  > {output.log} 2>&1 && "
+        "seq ${params.bin_size} | xargs -P {params.num_threads} -I {{}} sh -c \"./bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1\" >> {output.log} 2>&1)"
+
+
+rule didabwa_map_se:
+    input:
+        log="{prefix}/{reference}.didabwa.index.log",
+        rd="{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+",
+        bin_size="[0-9]+"
+    output:
+        "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.bam"
+    log:
+        "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.log"
+    params:
+        bin_size="1024",
+        n_threads=config["num_threads"],
+        index_dir="{prefix}.didabwa.index/",
+        misc=lambda wildcards: config["mappers"]["didabwa_" + wildcards.config]
+    shell:
+        "cd {params.index_dir}; "
+        "echo {input.read} > read.in; "
+        "command time -f 'RES:%e\\t%M\\t%P' "
+        "(./bin/dsp -j {params.num_threads} -p {params.bin_size} {params.misc} reads.in  > {log} 2>&1 && "
+        "seq ${params.bin_size} | xargs -P 8 -I {{}} sh -c \"./bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" >> {log} 2>&1 &&"
+        "./bin/mrg -p ${params.bin_size} -a bwa -m fast >> {log}  2>&1 );  "
+        "./bin/samtools view -@ {params.num_threads} -bS aln.sam > {output} "

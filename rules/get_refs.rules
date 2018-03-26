@@ -19,7 +19,7 @@ rule refs_download_bins:
         lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.bin_size],
                                      insecure=True, keep_local=False)
     output:
-        touch("{prefix}/{reference}_{meth}_{bin_size}/ref_0-{bin_size}")
+        "{prefix}/{reference}_{meth}_{bin_size}/ref_0-{bin_size}"
     params:
         comb="{prefix}/{reference}.fasta",
         b_size="{bin_size}",
