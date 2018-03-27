@@ -25,9 +25,9 @@ rule didabwa_map_se:
         config="[a-zA-Z0-9_]+",
         num_bins="[0-9]+"
     output:
-        "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.bam"
+        "{prefix}/{reads}.{reference}.didabwa_{config}.bam"
     log:
-        "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.log"
+        "{prefix}/{reads}.{reference}.didabwa_{config}.log"
     params:
         num_bins=config["num_bins"][0],
         num_threads=config["num_threads"],
