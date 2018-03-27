@@ -31,8 +31,14 @@
         "razers3_rabema": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000"
     },
 
-    "mappers": {
+    "mappers_bkp": {
         "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se ",
+        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
+        "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
+        "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
+        "bwa_rabema": "-a"
+    },
+    "mappers": {
         "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",

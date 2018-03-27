@@ -28,6 +28,6 @@ rule gem_map_se:
         misc=lambda wildcards: config["mappers"]["gem_" + wildcards.config]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/gem-mapper {params.misc} -I {input.idx}.gem -i {input.fq}  2> {log} | "
+        "sh -c './bin/gem-mapper {params.misc} -I {input.idx}.gem -i {input.fq} | "
         "./bin/gem-2-sam --threads 8 --quality-format offset-33 --sequence-lengths --index {input.idx}.gem --expect-single-end-reads | " 
-        "./bin/samtools view -@ {threads} -bS - > {output}"
+        "./bin/samtools view -@ {threads} -bS - > {output} '  > {log} 2>&1 "
