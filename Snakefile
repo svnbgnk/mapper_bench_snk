@@ -53,7 +53,7 @@ def expand_jobs(pattern, **kwargs):
  
 rule reference:
     input:
-        expand("data/{reference}_{bin_methods}_{num_bins}/ref_0-{num_bins}", 
+        expand("data/{reference}_{bin_methods}_{num_bins}/ref_{num_bins}", 
             reference=get_references(),
             bin_methods=config["bin_methods"],
             num_bins=config["num_bins"])
