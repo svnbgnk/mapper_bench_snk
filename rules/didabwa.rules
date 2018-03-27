@@ -8,7 +8,7 @@ rule didabwa_index_fm:
     params:
         outdir="{prefix}.didabwa.dir/",
         num_threads=config["num_threads"],
-        num_bins="1024"
+        num_bins=config["num_bins"][0]
     shell:
         "mkdir -p {params.outdir}; cd {params.outdir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
@@ -29,7 +29,7 @@ rule didabwa_map_se:
     log:
         "{prefix}/{reads}_{limit}.{reference}.didabwa_{config}.log"
     params:
-        num_bins="1024",
+        num_bins=config["num_bins"][0],
         num_threads=config["num_threads"],
         index_dir="{prefix}/{reference}.didabwa.dir/",
         misc=lambda wildcards: config["mappers"]["didabwa_" + wildcards.config]
