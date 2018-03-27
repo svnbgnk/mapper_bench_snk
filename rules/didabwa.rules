@@ -14,7 +14,7 @@ rule didabwa_index_fm:
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/prt -p {params.num_bins} ../../{input} && "
         "seq {params.num_bins} | xargs -P {params.num_threads} -I {{}} "
-        "sh -c \"../../bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1\" '  >> ../../{output} 2>&1"
+        "sh -c \" if [ -f mref-{{}}.fa ]; then ../../bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1; else echo NO_FILE: mref-{{}}.fa; fi\" '  >> ../../{output} 2>&1"
 
 
 rule didabwa_map_se:
@@ -38,6 +38,6 @@ rule didabwa_map_se:
         "echo `realpath ../../{input.read}` > reads.in; "
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/dsp -j {params.num_threads} -p {params.num_bins} {params.misc} reads.in && "
-        "seq {params.num_bins} | xargs -P 8 -I {{}} sh -c \" ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" && "
+        "seq {params.num_bins} | xargs -P 8 -I {{}} sh -c \" if [ -f mref-{{}}.fa ]; then ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1; else echo NO_FILE: mref-{{}}.fa; fi\" && "
         "../../bin/mrg -p {params.num_bins} -a bwa -m fast '  > ../../{log} 2>&1 ;  "
         "../../bin/samtools view -@ {params.num_threads} -bS aln.sam > ../../{output}; "
