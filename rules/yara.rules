@@ -18,7 +18,7 @@ rule yara_index:
 rule yara_map_se:
     input:
         "{prefix}/{reference}.yara.index",
-        "{prefix}/{reads}.fastq"
+        "{prefix}/{reads}_{limit}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"
     output:

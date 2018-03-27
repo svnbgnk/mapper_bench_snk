@@ -75,9 +75,9 @@ rule dream_yara_map_se:
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"
     output:
-        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam"
+        "{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam"
     log:
-        "{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam.log"
+        "{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam.log"
     params:
         idir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["dmappers"]["dyara_" + wildcards.config]

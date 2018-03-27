@@ -18,17 +18,17 @@ rule dist_yara_map_se:
         config="[a-zA-Z0-9_]+",
         num_bins="[0-9]+"
     output:
-        "{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{num_bins}.bam"
+        "{prefix}/{reads}.{reference}.distyara_{config}_{meth}_{num_bins}.bam"
     log:
-        "{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{num_bins}.bam.log"
+        "{prefix}/{reads}.{reference}.distyara_{config}_{meth}_{num_bins}.bam.log"
     params:
         indexer_log="{prefix}/{reference}.distyara_{meth}_{num_bins}.index.log",
         num_threads=config["num_threads"],
-        out_dir="{prefix}/{reads}_{limit}.{reference}.distyara_{config}_{meth}_{num_bins}/",
+        out_dir="{prefix}/{reads}.{reference}.distyara_{config}_{meth}_{num_bins}/",
         num_bins="{num_bins}",
         index_dir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config],
-        tmp_bam="{prefix}/{reads}_{limit}.{reference}.dyara_{config}_{meth}_{num_bins}.bam",
+        tmp_bam="{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam",
     shell:
         "mkdir -p {params.out_dir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
