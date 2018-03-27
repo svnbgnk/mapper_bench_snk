@@ -18,12 +18,12 @@ rule rabema_table:
                mapper=config["mappers"].keys()),
         rabema2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{num_bins}.{{errors}}.{{category}}.rabema_report_tsv",
                 mapper=config["dmappers"].keys(),
-                meth=config["bin_methods"].keys(),
-                num_bins=config["num_bins"].keys()),
+                meth=config["bin_methods"],
+                num_bins=config["num_bins"]),
         resources2=expand("{{prefix}}/{{reads}}_{{limit}}.{{reference}}.{mapper}_{meth}_{num_bins}.bam.res",
                 mapper=config["dmappers"].keys(),
-                meth=config["bin_methods"].keys(),
-                num_bins=config["num_bins"].keys())
+                meth=config["bin_methods"],
+                num_bins=config["num_bins"])
     output:
         "{prefix}/{reads}_{limit}.{reference}.{errors}.{category}.tab"
     script:
@@ -37,15 +37,15 @@ rule indexer_table:
                 indexer=config["indexers"].keys()),
         dis_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{num_bins}.index.res",
                 indexer=config["dindexers"].keys(),
-                meth=config["bin_methods"].keys(),
-                num_bins=config["num_bins"].keys()),
+                meth=config["bin_methods"],
+                num_bins=config["num_bins"]),
         dis_index_res2=expand("{{prefix}}/{{reference}}.distyara_{meth}_{num_bins}.index.res",
-                meth=config["bin_methods"].keys(),
-                num_bins=config["num_bins"].keys()),
+                meth=config["bin_methods"],
+                num_bins=config["num_bins"]),
         ibf_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{num_bins}.ibf.res",
                 indexer=config["ibf_indexers"].keys(),
-                meth=config["bin_methods"].keys(),
-                num_bins=config["num_bins"].keys())
+                meth=config["bin_methods"],
+                num_bins=config["num_bins"])
     output:
         "{prefix}/{reference}.tab"
     script:

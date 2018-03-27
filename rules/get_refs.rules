@@ -2,36 +2,54 @@
 # coding: utf-8
 from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
 FTP = FTPRemoteProvider()
-# rule refs_download:
-#     input:
-#         lambda wildcards: FTP.remote(config["genbank"][wildcards.reference],
-#                                      insecure=True, keep_local=False)
-#     output:
-#         "{prefix}/{reference}.fasta"
-#     shell:
-#         "gzip -cd {input} | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {output}"
 
 rule refs_download_bins:
     wildcard_constraints:
         meth="[taxoCKKTAXOckk]+",
-        bin_size="\d+"
+        num_bins="\d+"
     input:
-        lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.bin_size],
+        lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.num_bins],
                                      insecure=True, keep_local=False)
     output:
-        touch("{prefix}/{reference}_{meth}_{bin_size}/ref_0-{bin_size}")
+        touch("{prefix}/{reference}_{meth}_{num_bins}/ref_{num_bins}")
     params:
-        comb="{prefix}/{reference}.fasta",
-        b_size="{bin_size}",
-        in_dir="{reference}_{meth}_{bin_size}/",
-        out_dir="{prefix}/{reference}_{meth}_{bin_size}/"
+        num_bins="{num_bins}",
+        in_dir="{reference}_{meth}_{num_bins}/",
+        out_dir="{prefix}/{reference}_{meth}_{num_bins}/"
     shell:
         "tar -zxvf {input}; "
-        "touch {params.comb}; "
-        "bin=0; "
-        "while [ $bin -lt {params.b_size} ]; do "
-        "   cat {params.in_dir}$bin.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}$bin.fasta; "
-        "   cat {params.out_dir}$bin.fasta >> {params.comb}; "
-        "   bin=$((bin+1)); "
-        "done; "
+        "seq {params.num_bins} | xargs -P 8 -I {{}} "
+        "sh -c \" cat {params.in_dir}{{}}.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}.fasta; \" "
+        "rm -rf {params.in_dir} ; "
+
+rule refs_download:
+    input:
+        "{prefix}/{reference}_" + config["bin_methods"][0] + "_" + config["num_bins"][0] + "/ref_" + config["num_bins"][0]
+    output:
+        "{prefix}/{reference}.fasta"
+    params:
+        num_bins=config["num_bins"][0],
+        in_dir="{prefix}/{reference}_" + config["bin_methods"][0] + "_" + config["num_bins"][0] + "/"
+    shell:
+        "rm {output}; "
+        "seq {params.num_bins} | xargs -I {{}} sh -c \" cat {params.in_dir}{{}}.fasta >> {output}; \" "
+
+
+rule refs_update_download_bins:
+    wildcard_constraints:
+        meth="[taxoCKKTAXOckk]+",
+        num_bins="\d+"
+    input:
+        lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.num_bins + "_up" ],
+                                     insecure=True, keep_local=False)
+    output:
+        touch("{prefix}/{reference}_{meth}_{num_bins}_up/ref_up_{num_bins}")
+    params:
+        num_bins="{num_bins}",
+        in_dir="{reference}_{meth}_{num_bins}_up/",
+        out_dir="{prefix}/{reference}_{meth}_{num_bins}_up/"
+    shell:
+        "tar -zxvf {input}; "
+        "ls {params.in_dir} | xargs -P 8 -I {{}} "
+        "sh -c \" cat {params.in_dir}{{}}.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}.fasta; \" "
         "rm -rf {params.in_dir} ; "

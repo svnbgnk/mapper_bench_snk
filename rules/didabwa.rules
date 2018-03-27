@@ -39,5 +39,5 @@ rule didabwa_map_se:
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/dsp -j {params.num_threads} -p {params.num_bins} {params.misc} reads.in && "
         "seq {params.num_bins} | xargs -P 8 -I {{}} sh -c \" ../../bin/bwa mem -o aln-{{}}.sam mref-{{}}.fa mreads-{{}}.fastq > bwa_mem_{{}}.out 2>&1\" && "
-        "../../bin/mrg -p {params.num_bins} -a bwa -m fast '  > ../../{log} 2>&1 &&  "
-        "../../bin/samtools view -@ {params.num_threads} -bS aln.sam > ../../{output} "
+        "../../bin/mrg -p {params.num_bins} -a bwa -m fast '  > ../../{log} 2>&1 ;  "
+        "../../bin/samtools view -@ {params.num_threads} -bS aln.sam > ../../{output}; "

@@ -64,24 +64,19 @@ write_table <- function(tex_out)
                         
                     resFile = c()
                     resFileTS = c()
-                    x = "--\\ \\ "
+                    x = "--"
                     date = ""
                         
-                    if (subexp == "bin_size")
-                    {
-                        colname = "Bins"
-                        x = paste(INDEXER_BIN_SIZE[indexer], "\\ \\ ", sep='')
-                    }
                     if (subexp == "build_time" || subexp == "update_time" )
                     {
                         colname = "Build Runtime"
                         if (subexp == "update_time")
                         {
-                            RESOURCE_FILE_FM= paste(RESULT_DIR, paste(dataset, indexer, "index.up.res", sep='.'), sep='/')
-                            RESOURCE_FILE_IBF = paste(RESULT_DIR, paste(dataset, indexer, "ibf.up.res", sep='.'), sep='/')
+                            RESOURCE_FILE_FM= paste(RESULT_DIR, paste(dataset, indexer, "index_up.res", sep='.'), sep='/')
+                            RESOURCE_FILE_IBF = paste(RESULT_DIR, paste(dataset, indexer, "ibf_up.res", sep='.'), sep='/')
                             colname = "Update Runtime"
                         }
-                        unit = "[min:s]"
+                        unit = "[hr:min:s]"
                         field = "wc_time"
                         if ((R = load_file(RESOURCE_FILE_FM))$ok)
                         {
@@ -102,11 +97,11 @@ write_table <- function(tex_out)
                         }
                         if (fm_time > 0 && ibf_time > 0)
                         {
-                            x = paste("\\celltrio{", secsToTime(fm_time+ibf_time),"}{", secsToTime(fm_time), "}{", secsToTime(ibf_time), "}", "\\ \\", sep='')
+                            x = paste("\\celltrio{", secsToTime(fm_time+ibf_time),"}{", secsToTime(fm_time), "}{", secsToTime(ibf_time), "}", sep='')
                         } 
                         else if(fm_time > 0)
                         {
-                            x = paste(secsToMinSec(fm_time), "\\ \\ ", sep='')
+                            x = paste(secsToTime(fm_time), sep='')
                         }
                     }
 
@@ -159,7 +154,7 @@ write_table <- function(tex_out)
             if (length(M) > 0 && length(rnames) < nrow(M))
             {
                 rnames = c(rnames,paste(separator,"\\multirow{",nrow(M)-length(rnames),"}{*}{\\begin{sideways}",MODE_LABEL[mode],"\\quad\\ \\end{sideways}}",sep=''))
-                separator = "\\midrule"
+                separator = "\\midrule "
                 while (length(rnames) < nrow(M))
                 {
                     space = paste(space, "")
@@ -216,11 +211,11 @@ write_table <- function(tex_out)
             "\\toprule\n  ",
             superheader,
             superheader_extra,
-            midrules, " \n  ",
+            midrules, "\\\\\n  ",
             colheaders, " \\\\\n  ",
             ifelse(show_units, yes = paste(colheaders_units, "\\\\\n"), no = ""),
             sep=''),
-        '\\midrule\n',
+        '\\midrule\n  ',
         '\\bottomrule\n')
 
     U <- xtable(M, align=align)

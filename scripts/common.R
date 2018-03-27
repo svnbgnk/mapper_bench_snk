@@ -48,34 +48,21 @@ MAPPERS_LABEL = c(
     distyara_rabema_taxo_1024="Distr. Yara",
     razers3_rabema="RazerS 3",
     bowtie2_rabema="Bowtie 2",
-    bwamem_rabema="BWA-MEM",
+    bwa_rabema="BWA-MEM",
     gem_rabema="GEM"
 )
 INDEXER_LABEL = c(
     yara="Yara",
-    dyara_taxo_1024="Dream Yara",
-    dyara_taxo_256 ="Dream Yara",
-    dyara_taxo_64  ="Dream Yara",
-    distyara_taxo_1024="Distr. Yara",
-    distyara_taxo_256 ="Distr. Yara",
-    distyara_taxo_64  ="Distr. Yara",
+    dyara_taxo_1024="Dream Yara 1024",
+    dyara_taxo_256 ="Dream Yara 256",
+    dyara_taxo_64  ="Dream Yara 64",
+    distyara_taxo_1024="Distr. Yara 1024",
+    distyara_taxo_256 ="Distr. Yara 256",
+    distyara_taxo_64  ="Distr. Yara 64",
     razers3="RazerS 3",
     bowtie2="Bowtie 2",
-    bwamem="BWA-MEM",
+    bwa="BWA-MEM",
     gem="GEM"
-)
-INDEXER_BIN_SIZE = c(
-    dyara_taxo_1024="1024",
-    dyara_taxo_256 ="256",
-    dyara_taxo_64  ="64",
-    distyara_taxo_1024="1024",
-    distyara_taxo_256 ="256",
-    distyara_taxo_64  ="64",
-    yara="--",
-    razers3="-- ",
-    bowtie2="-- ",
-    bwamem="-- ",
-    gem="--"
 )
 
 #Create a custom color scale

@@ -19,13 +19,13 @@ rule bwamem_map_se:
     wildcard_constraints:
         config="[a-zA-Z0-9_]+"
     output:
-        "{prefix}/{reads}.{reference}.bwamem_{config}.bam"
+        "{prefix}/{reads}.{reference}.bwa_{config}.bam"
     log:
-        "{prefix}/{reads}.{reference}.bwamem_{config}.bam.log"
+        "{prefix}/{reads}.{reference}.bwa_{config}.bam.log"
     threads:
         config.get("threads", 1)
     params:
-        lambda wildcards: config["mappers"]["bwamem_" + wildcards.config]
+        lambda wildcards: config["mappers"]["bwa_" + wildcards.config]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/bwa mem -t {threads} {params} {input.idx} {input.fq} "

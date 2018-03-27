@@ -36,22 +36,16 @@ include: "rules/bwa.rules"
 def get_references():
     return [row[0] for row in config["jobs"]]
 
-def get_methods():
+def get_reads():
     return [row[1] for row in config["jobs"]]
 
-def get_num_bins():
-    return [row[2] for row in config["jobs"]]
-
-def get_reads():
-    return [row[3] for row in config["jobs"]]
-
 def get_limits():
-    return [row[4] for row in config["jobs"]]
+    return [row[2] for row in config["jobs"]]
 
 def expand_jobs(pattern, **kwargs):
     jobs = []
-    for reference, bin_methods, num_bins, reads, limit in config["jobs"]:
-        jobs.extend(expand(pattern, reference=reference, bin_methods=bin_methods, num_bins=num_bins, reads=reads, limit=limit, **kwargs))
+    for reference, reads, limit in config["jobs"]:
+        jobs.extend(expand(pattern, reference=reference, reads=reads, limit=limit, **kwargs))
     return jobs
 
 
@@ -61,8 +55,12 @@ rule reference:
     input:
         expand("data/{reference}_{bin_methods}_{num_bins}/ref_0-{num_bins}", 
             reference=get_references(),
-            bin_methods=get_methods(),
-            num_bins=get_num_bins()),
+            bin_methods=config["bin_methods"],
+            num_bins=config["num_bins"])
+
+rule reference_merge:
+    input:
+        expand("data/{reference}.fasta",  reference=get_references())
 
 rule index:
     input:
@@ -70,13 +68,26 @@ rule index:
         dis=expand("data/{reference}.{indexer}_{bin_methods}_{num_bins}.index.log",
             reference=get_references(), 
             indexer=config["dindexers"].keys(),
-            bin_methods=config["bin_methods"].keys(),
-            num_bins=config["num_bins"].keys()),
+            bin_methods=config["bin_methods"],
+            num_bins=config["num_bins"]),
         ibf=expand("data/{reference}.{indexer}_{bin_methods}_{num_bins}.filter",
             reference=get_references(), 
             indexer=config["ibf_indexers"].keys(),
-            bin_methods=config["bin_methods"].keys(),
-            num_bins=config["num_bins"].keys())
+            bin_methods=config["bin_methods"],
+            num_bins=config["num_bins"])
+
+rule index_update:
+    input:
+        dis=expand("data/{reference}.{indexer}_{bin_methods}_{num_bins}.index_up.log",
+            reference=get_references(), 
+            indexer=config["dindexers"].keys(),
+            bin_methods=config["bin_methods"],
+            num_bins=config["num_bins"]),
+        ibf=expand("data/{reference}.{indexer}_{bin_methods}_{num_bins}_up.filter",
+            reference=get_references(), 
+            indexer=config["ibf_indexers"].keys(),
+            bin_methods=config["bin_methods"],
+            num_bins=config["num_bins"])
 
 rule reads:
     input:
@@ -88,7 +99,9 @@ rule map:
         std=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}.bam",
                     mapper=config["mappers"].keys()),
         dis=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}_{bin_methods}_{num_bins}.bam",
-                    mapper=config["dmappers"].keys())
+                    mapper=config["dmappers"].keys(),
+                    bin_methods=config["bin_methods"],
+                    num_bins=config["num_bins"])
 
 rule gold:
     input:
@@ -99,10 +112,14 @@ rule evaluate:
     input:
         std=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}.{errors}.{category}.rabema_report_tsv",
                     mapper=config["mappers"].keys(),
+                    bin_methods=config["bin_methods"],
+                    num_bins=config["num_bins"],
                     errors="5",
                     category="all-best"),
         dis=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}_{bin_methods}_{num_bins}.{errors}.{category}.rabema_report_tsv",
                     mapper=config["dmappers"].keys(),
+                    bin_methods=config["bin_methods"],
+                    num_bins=config["num_bins"],
                     errors="5",
                     category="all-best")
 

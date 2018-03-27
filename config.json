@@ -1,19 +1,29 @@
 {
     "jobs": [
-        ["A_B_refseq_sample", "taxo", 1024, "ABSim100K", 100000]
+        ["A_B_refseq_sample", "ABSim100K", 100000]
     ],
     "jobs_DISABLED": [
-        ["A_B_refseq_20170926", "taxo", 1024, "ABSim", 10000]
+        ["A_B_refseq_20170926", "ABSim", 10000]
     ],
     "genbank": {
-        "A_B_refseq_20170926_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/A_B_refseq_20170926_taxo_1024.tar.gz",
-        "A_B_refseq_sample_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/A_B_refseq_sample_taxo_1024.tar.gz",
+        "A_B_refseq_20170926_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_1024.tar.gz",
+        "A_B_refseq_20170926_taxo_256": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_256.tar.gz",
+        "A_B_refseq_20170926_taxo_64": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_64.tar.gz",
+        "A_B_refseq_sample_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_sample_taxo_1024.tar.gz",
+        "A_B_refseq_sample_taxo_256": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_sample_taxo_256.tar.gz",
+        "A_B_refseq_sample_taxo_64": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_sample_taxo_64.tar.gz",
+        "A_B_refseq_20170926_taxo_1024_up": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_1024_up.tar.gz",
+        "A_B_refseq_20170926_taxo_256_up": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_256_up.tar.gz",
+        "A_B_refseq_20170926_taxo_64_up": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_64_up.tar.gz",
+        "A_B_refseq_sample_taxo_1024_up": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_sample_taxo_1024_up.tar.gz",
+        "A_B_refseq_sample_taxo_256_up": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_sample_taxo_256_up.tar.gz",
+        "A_B_refseq_sample_taxo_64_up": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_sample_taxo_64_up.tar.gz",
         "GRCh38": "ftp.ncbi.nlm.nih.gov/genomes/genbank/vertebrate_mammalian/Homo_sapiens/all_assembly_versions/GCA_000001405.24_GRCh38.p9/GCA_000001405.24_GRCh38.p9_genomic.fna.gz",
         "Ecoli_K12_MG1655": "ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/Escherichia_coli/all_assembly_versions/GCA_000005845.2_ASM584v2/GCA_000005845.2_ASM584v2_genomic.fna.gz"
     },
     "fastq": {
-        "ABSim": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/ABSim.fastq.gz",
-        "ABSim100K": "ftp://ftp.mi.fu-berlin.de/pub/dadi/test_site/ABSim100K.fastq.gz",
+        "ABSim": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/ABSim.fastq.gz",
+        "ABSim100K": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/ABSim100K.fastq.gz",
         "ERR161544": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR161/ERR161544/ERR161544.sra",
         "ERR008613": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR008/ERR008613/ERR008613.sra"
     },
@@ -26,7 +36,7 @@
         "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
-        "bwamem_rabema": "-a"
+        "bwa_rabema": "-a"
     },
     "dmappers": {
         "distyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
@@ -44,12 +54,9 @@
     "ibf_indexers": {
         "dyara": "--version-check OFF -v --kmer-size 19 -ft bloom --bloom-size 4 --num-hash 3 --threads 8"
     },
-    "num_bins": {
-        "1024": 1024
-    },
-    "bin_methods": {
-        "taxo": "taxo"
-    },
+    "num_bins": ["1024"],
+    "num_bins_bkp": ["1024", "256", "64"],
+    "bin_methods": ["taxo"],
     "razers3_gold_param": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000",
     "num_threads": 8,  
     "parts": 32,  
