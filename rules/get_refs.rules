@@ -51,5 +51,5 @@ rule refs_update_download_bins:
     shell:
         "tar -zxvf {input}; "
         "ls {params.in_dir} | xargs -P 8 -I {{}} "
-        "sh -c \" cat {params.in_dir}{{}}.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}.fasta; \" "
+        "sh -c \" cat {params.in_dir}{{}} | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}; \" "
         "rm -rf {params.in_dir} ; "

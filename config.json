@@ -1,6 +1,8 @@
 {
     "jobs": [
-        ["A_B_refseq_20170926", "ABSim", 10000]
+        ["A_B_refseq_20170926", "ABSim", 10000],
+        ["A_B_refseq_20170926", "ABSim", 1000000],
+        ["A_B_refseq_20170926", "ABSim", 10000000]
     ],
     "jobs_DISABLED": [
         ["A_B_refseq_sample", "ABSim100K", 100000]
