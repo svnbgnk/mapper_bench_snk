@@ -10,7 +10,8 @@ rule didabwa_index_fm:
         num_threads=config["num_threads"],
         num_bins=config["num_bins"][0]
     shell:
-        "mkdir -p {params.outdir}; cd {params.outdir}; "
+        "ulimit -n $(({params.num_bins} * 2)); "
+        " mkdir -p {params.outdir}; cd {params.outdir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/prt -p {params.num_bins} ../../{input} && "
         "seq {params.num_bins} | xargs -P {params.num_threads} -I {{}} "
@@ -34,6 +35,7 @@ rule didabwa_map_se:
         index_dir="{prefix}/{reference}.didabwa.dir/",
         misc=lambda wildcards: config["mappers"]["didabwa_" + wildcards.config]
     shell:
+        "ulimit -n $(({params.num_bins} * 2)); "
         "cd {params.index_dir}; "
         "echo `realpath ../../{input.read}` > reads.in; "
         "command time -f 'RES:%e\\t%M\\t%P' "
