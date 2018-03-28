@@ -26,7 +26,7 @@ rule dream_yara_index_fm_update:
         log="{prefix}.dyara_{meth}_{num_bins}.index_up.log",
         odir="{prefix}.dyara_{meth}_{num_bins}.indices_up/"
     params:
-        idir="{prefix}_{meth}_{num_bins}/",
+        idir="{prefix}_{meth}_{num_bins}_up/",
         misc=config["dindexers"]["dyara"]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
