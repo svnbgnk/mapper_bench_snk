@@ -127,5 +127,8 @@ rule report:
     input:
         mapper=expand_jobs("data/{reads}_{limit}.{reference}.{errors}.{category}.pdf",
                     errors="5",
-                    category="all-best"),
+                    category="all-best")
+
+rule report_index:
+    input:
         indexer=expand_jobs("data/{reference}.pdf")
