@@ -62,8 +62,8 @@
     "ibf_indexers": {
         "dyara": "--version-check OFF -v --kmer-size 19 -ft bloom --bloom-size 4 --num-hash 3 --threads 8"
     },
-    "num_bins": ["1024"],
-    "num_bins_bkp": ["1024", "256", "64"],
+    "num_bins_bkp": ["1024"],
+    "num_bins": ["1024", "256", "64"],
     "bin_methods": ["taxo"],
     "razers3_gold_param": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000",
     "num_threads": 8,  
