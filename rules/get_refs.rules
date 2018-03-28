@@ -19,7 +19,7 @@ rule refs_download_bins:
     shell:
         "tar -zxvf {input}; "
         "seq 0 $(({params.num_bins}-1)) | xargs -P 8 -I {{}} "
-        "sh -c \" cat {params.in_dir}{{}}.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}.fasta; \" "
+        "sh -c \" cat {params.in_dir}{{}}.fasta | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}.fasta; \"; "
         "rm -rf {params.in_dir} ; "
 
 rule refs_download:
@@ -32,7 +32,7 @@ rule refs_download:
         in_dir="{prefix}/{reference}_" + config["bin_methods"][0] + "_" + config["num_bins"][0] + "/"
     shell:
         "touch {output}; rm {output}; "
-        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} sh -c \" cat {params.in_dir}{{}}.fasta >> {output}; \" "
+        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} sh -c \" cat {params.in_dir}{{}}.fasta >> {output}; \"; "
 
 
 rule refs_update_download_bins:
@@ -51,5 +51,5 @@ rule refs_update_download_bins:
     shell:
         "tar -zxvf {input}; "
         "ls {params.in_dir} | xargs -P 8 -I {{}} "
-        "sh -c \" cat {params.in_dir}{{}} | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}; \" "
-        "rm -rf {params.in_dir} ; "
+        "sh -c \" cat {params.in_dir}{{}} | sed -e '/^>/! s/\([^ACGTacgt]\)/N/g'|awk -F' ' '{{print $1}}' > {params.out_dir}{{}}; \"; "
+        "rm -rf {params.in_dir}; "
