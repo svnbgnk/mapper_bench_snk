@@ -1,6 +1,6 @@
 {
     "jobs": [
-        ["A_B_refseq_20170926", "ABSim", 10000]
+        ["A_B_refseq_20170926", "ABSim", 1000000]
     ],
     "jobs_DISABLED": [
         ["A_B_refseq_20170926", "ABSim", 1000000],
@@ -41,6 +41,7 @@
         "bwa_rabema": "-a"
     },
     "mappers": {
+        "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se ",
         "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
