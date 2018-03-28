@@ -1,5 +1,16 @@
 # vim: syntax=python tabstop=4 expandtab
 # coding: utf-8
+rule dist_yara_index_fm_update:
+    input:
+        "{prefix}.dyara_{meth}_{num_bins}.index_up.log"
+    output:
+        "{prefix}.distyara_{meth}_{num_bins}.index_up.log",
+    params:
+        idir="{prefix}_{meth}_{num_bins}/",
+    shell:
+        "cp {input} {output};"
+
+
 rule dist_yara_index_fm:
     input:
         "{prefix}.dyara_{meth}_{num_bins}.index.log"
