@@ -6,7 +6,8 @@ FTP = FTPRemoteProvider()
 rule refs_download_bins:
     wildcard_constraints:
         meth="[taxoCKKTAXOckk]+",
-        num_bins="\d+"
+        num_bins="\d+",
+        reference="[a-zA-Z0-9]+"
     input:
         lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.num_bins],
                                      insecure=True, keep_local=False)
@@ -23,7 +24,11 @@ rule refs_download_bins:
         "rm -rf {params.in_dir} ; "
 
 rule refs_download:
-    input:
+    wildcard_constraints:
+        meth="[taxoCKKTAXOckk]+",
+        num_bins="\d+",
+        reference="[a-zA-Z0-9]+"
+     input:
         "{prefix}/{reference}_" + config["bin_methods"][0] + "_" + config["num_bins"][0] + "/ref_" + config["num_bins"][0]
     output:
         "{prefix}/{reference}.fasta"
@@ -38,8 +43,9 @@ rule refs_download:
 rule refs_update_download_bins:
     wildcard_constraints:
         meth="[taxoCKKTAXOckk]+",
-        num_bins="\d+"
-    input:
+        num_bins="\d+",
+        reference="[a-zA-Z0-9]+"
+     input:
         lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.num_bins + "_up" ],
                                      insecure=True, keep_local=False)
     output:

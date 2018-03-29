@@ -23,7 +23,7 @@ rule dist_yara_index_fm:
 
 rule dist_yara_map_se:
     input:
-        log="{prefix}/{reference}.distyara_{meth}_{num_bins}.index.log",
+        log="{prefix}/{reference}.dyara_{meth}_{num_bins}.index.log",
         rd="{prefix}/{reads}.fastq"
     wildcard_constraints:
         config="[a-zA-Z0-9_]+",
