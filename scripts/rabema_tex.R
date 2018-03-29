@@ -12,7 +12,7 @@ reference = snakemake@wildcards[['reference']]
 MAX_ERRORS = strtoi(snakemake@wildcards[['errors']])
 category = snakemake@wildcards[['category']]
 
-READ_LENGTHS = c(100)
+READ_LENGTHS = c(150)
 # DATASET = c(paste(paste(reads, num_reads, suffix, sep='_'), reference, sep='.'))
 DATASET = c(paste(paste(reads, num_reads, sep='_'), reference, sep='.'))
 #DATASET_LABEL = c("Illumina HiSeq 2000")
