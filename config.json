@@ -1,11 +1,11 @@
 {
     "jobs": [
-        ["A_B_refseq_sample", "ABSim100K", 10000]
+         ["A_B_refseq_20170926", "ABSim", 1000000]
     ],
     "jobs_DISABLED": [
         ["A_B_refseq_20170926", "ABSim", 100000],
         ["A_B_refseq_20170926", "ABSim", 1000000],
-         ["A_B_refseq_20170926", "ABSim", 1000000]
+        ["A_B_refseq_sample", "ABSim100K", 10000]
     ],
     "genbank": {
         "A_B_refseq_20170926_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_1024.tar.gz",
@@ -48,6 +48,7 @@
         "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
     },
     "indexers": {
+        "didabwa": " ",
         "yara": "--version-check OFF -v",
         "bowtie2": "--threads 8",
         "gem": "--threads 8",
@@ -59,8 +60,8 @@
     "ibf_indexers": {
         "dyara": "--threads 8 --kmer-size 19 --filter-type bloom --bloom-size 16 --num-hash 3 --version-check OFF -v "
     },
-    "num_bins": ["1024"],
-    "num_bins_bkp": ["1024", "256", "64"],
+    "num_bins_bkp": ["1024"],
+    "num_bins": ["1024", "256", "64"],
     "bin_methods": ["taxo"],
     "razers3_gold_param": "--thread-count 0 --percent-identity 95 --recognition-rate 100 --distance-range 0 --dont-shrink-alignments --max-hits 10000000 --version-check OFF -v",
     "num_threads": 8,  

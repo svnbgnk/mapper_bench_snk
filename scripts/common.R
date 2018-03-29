@@ -44,22 +44,26 @@ RABEMA_LABEL = c('all-best'='Co-opt.',all='Subopt.')
 
 MAPPERS_LABEL = c(
     yara_rabema="Yara [s=0]",
+    didabwa="DIDA-BWA",
     dyara_rabema_taxo_1024="Dream Yara [s=0]",
+    dyara_rabema_taxo_256="Dream Yara [s=0]",
+    dyara_rabema_taxo_64="Dream Yara [s=0]",
     distyara_rabema_taxo_1024="Distr. Yara [s=0]",
-    razers3_rabema="RazerS 3",
+    distyara_rabema_taxo_256="Distr. Yara [s=0]",
+    distyara_rabema_taxo_64="Distr. Yara [s=0]",
     bowtie2_rabema="Bowtie 2",
     bwa_rabema="BWA-MEM",
     gem_rabema="GEM"
 )
 INDEXER_LABEL = c(
     yara="Yara",
+    didabwa="DIDA-BWA [1024]",
     dyara_taxo_1024="Dream Yara 1024",
     dyara_taxo_256 ="Dream Yara 256",
     dyara_taxo_64  ="Dream Yara 64",
     distyara_taxo_1024="Distr. Yara 1024",
     distyara_taxo_256 ="Distr. Yara 256",
     distyara_taxo_64  ="Distr. Yara 64",
-    razers3="RazerS 3",
     bowtie2="Bowtie 2",
     bwa="BWA-MEM",
     gem="GEM"

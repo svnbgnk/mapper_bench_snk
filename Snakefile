@@ -87,7 +87,9 @@ rule index_update:
             reference=get_references(), 
             indexer=config["ibf_indexers"].keys(),
             bin_methods=config["bin_methods"],
-            num_bins=config["num_bins"])
+            num_bins=config["num_bins"]),
+        dida=expand("data/{reference}.didabwa.index_up.log",
+            reference=get_references())
 
 rule reads:
     input:
