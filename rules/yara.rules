@@ -13,7 +13,7 @@ rule yara_index:
         misc=config["indexers"]["yara"]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/yara_indexer {params.misc} {input} -o {output} 2> {log}"
+        "./bin/yara_indexer {params.misc} {input} --output-prefix {output} 2> {log}"
 
 rule yara_map_se:
     input:
@@ -29,4 +29,4 @@ rule yara_map_se:
         misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/yara_mapper {params.misc} -o {output} {input} 2> {log}"
+        "./bin/yara_mapper {params.misc} --output-file {output} {input} 2> {log}"

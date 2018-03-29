@@ -1,11 +1,11 @@
 {
     "jobs": [
-         ["A_B_refseq_20170926", "ABSim", 1000000]
+        ["A_B_refseq_sample", "ABSim100K", 10000]
     ],
     "jobs_DISABLED": [
         ["A_B_refseq_20170926", "ABSim", 100000],
         ["A_B_refseq_20170926", "ABSim", 1000000],
-        ["A_B_refseq_sample", "ABSim100K", 100000]
+         ["A_B_refseq_20170926", "ABSim", 1000000]
     ],
     "genbank": {
         "A_B_refseq_20170926_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_1024.tar.gz",
@@ -29,27 +29,23 @@
         "ERR161544": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR161/ERR161544/ERR161544.sra",
         "ERR008613": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR008/ERR008613/ERR008613.sra"
     },
-    "gmappers": {
-        "razers3_rabema": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000"
-    },
-
     "mappers_bkp": {
-        "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se ",
+        "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
         "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
         "bwa_rabema": "-a"
     },
     "mappers": {
-        "didabwa_rabema": "-l 19 -b 19 -s 1 --fq --se ",
+        "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
         "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
-        "bwa_rabema": "-a"
+        "bwa_rabema": "-t 8 -a"
     },
     "dmappers": {
-        "distyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
-        "dyara_rabema": "--threads 8 -ft bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
+        "distyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
+        "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
     },
     "indexers": {
         "yara": "--version-check OFF -v",
@@ -61,12 +57,12 @@
         "dyara": "--version-check OFF -v --threads 8"
     },
     "ibf_indexers": {
-        "dyara": "--version-check OFF -v --kmer-size 19 -ft bloom --bloom-size 16 --num-hash 3 --threads 8"
+        "dyara": "--threads 8 --kmer-size 19 --filter-type bloom --bloom-size 16 --num-hash 3 --version-check OFF -v "
     },
     "num_bins": ["1024"],
     "num_bins_bkp": ["1024", "256", "64"],
     "bin_methods": ["taxo"],
-    "razers3_gold_param": "--version-check OFF -v -tc 0 -i 95 -rr 100 -dr 0 -ds -m 10000000",
+    "razers3_gold_param": "--thread-count 0 --percent-identity 95 --recognition-rate 100 --distance-range 0 --dont-shrink-alignments --max-hits 10000000 --version-check OFF -v",
     "num_threads": 8,  
     "parts": 32,  
     "bigFasta": "A_B_refseq_20170926.fna.gz",

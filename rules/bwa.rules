@@ -22,12 +22,10 @@ rule bwamem_map_se:
         "{prefix}/{reads}.{reference}.bwa_{config}.bam"
     log:
         "{prefix}/{reads}.{reference}.bwa_{config}.bam.log"
-    threads:
-        config.get("threads", 1)
     params:
         lambda wildcards: config["mappers"]["bwa_" + wildcards.config]
     shell:
         "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/bwa mem -t {threads} {params} {input.idx} {input.fq} "
+        "./bin/bwa mem  {params} {input.idx} {input.fq} "
         "-R '@RG\\tID:none\\tSM:none' 2> {log} | "
         "./bin/samtools view -@ {threads} -bS - > {output} "
