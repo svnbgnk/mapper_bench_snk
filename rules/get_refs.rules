@@ -28,7 +28,7 @@ rule refs_download:
         meth="[taxoCKKTAXOckk]+",
         num_bins="\d+",
         reference="[a-zA-Z0-9]+"
-     input:
+    input:
         "{prefix}/{reference}_" + config["bin_methods"][0] + "_" + config["num_bins"][0] + "/ref_" + config["num_bins"][0]
     output:
         "{prefix}/{reference}.fasta"
@@ -45,7 +45,7 @@ rule refs_update_download_bins:
         meth="[taxoCKKTAXOckk]+",
         num_bins="\d+",
         reference="[a-zA-Z0-9]+"
-     input:
+    input:
         lambda wildcards: FTP.remote(config["genbank"][wildcards.reference + "_" + wildcards.meth + "_" + wildcards.num_bins + "_up" ],
                                      insecure=True, keep_local=False)
     output:
