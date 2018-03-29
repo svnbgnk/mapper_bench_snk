@@ -103,8 +103,10 @@ write_table <- function(tex_out)
                                         
                                         if (l > 1)
                                             s = paste(s, "&")
-                                        from_err = (err - 1) * READ_LENGTHS[io] / 100.0;
-                                        to_err   =  err      * READ_LENGTHS[io] / 100.0;
+                                        # from_err = (err - 1) * READ_LENGTHS[io] / 100.0;
+                                        # to_err   =  err      * READ_LENGTHS[io] / 100.0;
+                                        from_err = (err - 1) ;
+                                        to_err   =  err      ;
                                         #if (err == MAX_ERRORS)
                                         #    to_err = from_err + 1
                                         X=subset(raw.data, from_err < error_rate & error_rate <= to_err)

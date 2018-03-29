@@ -19,7 +19,7 @@ DATASET = c(paste(paste(reads, num_reads, sep='_'), reference, sep='.'))
 MODES = c("rabema")
 MODE2MAPPERS = list(
     # rabema = c("yara_rabema","razers3_rabema","bowtie2_rabema","bwamem_rabema")
-    rabema = c("dyara_rabema_taxo_1024","distyara_rabema_taxo_1024","yara_rabema","gem_rabema","bowtie2_rabema","bwa_rabema")
+    rabema = c("distyara_rabema_taxo_1024","dyara_rabema_taxo_1024","yara_rabema","gem_rabema","bowtie2_rabema","bwa_rabema")
 )
 
 COLUMNS = c(paste("Rrx", category, sep="_"),"P_throughput","P_memory")

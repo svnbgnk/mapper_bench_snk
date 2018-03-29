@@ -43,9 +43,9 @@ MODE_LABEL = c(default="default",rabema="all-best",build="build")
 RABEMA_LABEL = c('all-best'='Co-opt.',all='Subopt.')
 
 MAPPERS_LABEL = c(
-    yara_rabema="Yara",
-    dyara_rabema_taxo_1024="Dream Yara",
-    distyara_rabema_taxo_1024="Distr. Yara",
+    yara_rabema="Yara [s=0]",
+    dyara_rabema_taxo_1024="Dream Yara [s=0]",
+    distyara_rabema_taxo_1024="Distr. Yara [s=0]",
     razers3_rabema="RazerS 3",
     bowtie2_rabema="Bowtie 2",
     bwa_rabema="BWA-MEM",
