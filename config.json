@@ -1,11 +1,13 @@
 {
     "jobs": [
-         ["A_B_refseq_20170926", "ABSim", 1000000]
+         ["A_B_refseq_20170926", "SRR6504858", 40000000]
     ],
     "jobs_DISABLED": [
         ["A_B_refseq_20170926", "ABSim", 100000],
+        ["A_B_refseq_20170926", "SRR6504858", 40000000],
         ["A_B_refseq_20170926", "ABSim", 1000000],
-        ["A_B_refseq_sample", "ABSim100K", 10000]
+        ["A_B_refseq_sample", "ABSim100K", 10000],
+        ["A_B_refseq_20170926", "ABSim", 1000000]
     ],
     "genbank": {
         "A_B_refseq_20170926_taxo_1024": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/A_B_refseq_20170926_taxo_1024.tar.gz",
@@ -27,7 +29,8 @@
         "ABSim": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/ABSim.fastq.gz",
         "ABSim100K": "ftp://ftp.mi.fu-berlin.de/pub/dadi/dream_yara_data/ABSim100K.fastq.gz",
         "ERR161544": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR161/ERR161544/ERR161544.sra",
-        "ERR008613": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR008/ERR008613/ERR008613.sra"
+        "ERR008613": "ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/ERR/ERR008/ERR008613/ERR008613.sra",
+        "SRR6504858": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR650/008/SRR6504858/SRR6504858_1.fastq.gz"
     },
     "mappers_bkp": {
         "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
