@@ -34,21 +34,21 @@
     },
     "mappers_bkp": {
         "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
-        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
-        "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
+        "yara_rabema": "--threads 8 --error-rate 4 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
+        "gem_rabema": "--threads 8 --quality-format ignore -m 0.04 -e 0.04 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
         "bwa_rabema": "-a"
     },
     "mappers": {
         "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
-        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
-        "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
+        "yara_rabema": "--threads 8 --error-rate 4 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
+        "gem_rabema": "--threads 8 --quality-format ignore -m 0.04 -e 0.04 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
         "bwa_rabema": "-t 8 -a"
     },
     "dmappers": {
-        "distyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
-        "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
+        "distyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 4 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
+        "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 4 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
     },
     "indexers": {
         "didabwa": " ",
@@ -66,7 +66,7 @@
     "num_bins_bkp": ["1024"],
     "num_bins": ["1024", "256", "64"],
     "bin_methods": ["taxo"],
-    "razers3_gold_param": "--thread-count 0 --percent-identity 95 --recognition-rate 100 --distance-range 0 --dont-shrink-alignments --max-hits 10000000 --version-check OFF -v",
+    "razers3_gold_param": "--thread-count 0 --percent-identity 96 --recognition-rate 100 --distance-range 0 --dont-shrink-alignments --max-hits 10000000 --version-check OFF -v",
     "num_threads": 8,  
     "parts": 32,  
     "bigFasta": "A_B_refseq_20170926.fna.gz",
