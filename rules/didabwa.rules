@@ -28,14 +28,14 @@ rule didabwa_index_fm_update:
         tmp_dir="{prefix}_tmp_didabwa_dir/"
     shell:
         "mkdir -p {params.tmp_dir};  "
-        "num_part=`ls {params.tmp_dir}*.fasta|wc -l` ;"
+        "export num_part=`ls {params.idir}*.fasta|wc -l` ;"
         "cat {params.idir}*.fasta > {params.tmp_dir}dida_update.fasta; "
         "cd {params.tmp_dir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c '../../bin/prt --partition ${{num_part}} dida_update.fasta && "
         "seq ${{num_part}} | xargs -P {params.num_threads} -I {{}} "
-        "sh -c \" if [ -f mref-{{}}.fa ]; then ../../bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1; else echo NO_FILE: mref-{{}}.fa; fi\" '  >> ../../{output} 2>&1 "
-        "cd ../../; rm {params.tmp_dir}; "
+        "sh -c \" if [ -f mref-{{}}.fa ]; then ../../bin/bwa index mref-{{}}.fa > bwa_index_{{}}.out 2>&1; else echo NO_FILE: mref-{{}}.fa; fi\" '  >> ../../{output} 2>&1 ; "
+        "cd ../../; rm -r {params.tmp_dir}; "
 
 
 rule didabwa_map_se:
