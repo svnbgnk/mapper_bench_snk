@@ -22,6 +22,8 @@ rule bwamem_map_se:
         "{prefix}/{reads}.{reference}.bwa_{config}.bam"
     log:
         "{prefix}/{reads}.{reference}.bwa_{config}.bam.log"
+    benchmark:
+        "{prefix}/{reads}.{reference}.bwa_{config}.bam.bench"
     params:
         lambda wildcards: config["mappers"]["bwa_" + wildcards.config]
     shell:

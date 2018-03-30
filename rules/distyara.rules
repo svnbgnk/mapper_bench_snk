@@ -32,6 +32,8 @@ rule dist_yara_map_se:
         "{prefix}/{reads}.{reference}.distyara_{config}_{meth}_{num_bins}.bam"
     log:
         "{prefix}/{reads}.{reference}.distyara_{config}_{meth}_{num_bins}.bam.log"
+    benchmark:
+        "{prefix}/{reads}.{reference}.distyara_{config}_{meth}_{num_bins}.bam.bench"
     params:
         indexer_log="{prefix}/{reference}.distyara_{meth}_{num_bins}.index.log",
         num_threads=config["num_threads"],

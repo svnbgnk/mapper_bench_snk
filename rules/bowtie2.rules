@@ -26,6 +26,8 @@ rule bowtie2_map_se:
         "{prefix}/{reads}.{reference}.bowtie2_{config}.bam"
     log:
         "{prefix}/{reads}.{reference}.bowtie2_{config}.bam.log"
+    benchmark:
+        "{prefix}/{reads}.{reference}.bowtie2_{config}.bam.bench"
     params:
         num_threads=config["num_threads"],
         misc=lambda wildcards: config["mappers"]["bowtie2_" + wildcards.config]

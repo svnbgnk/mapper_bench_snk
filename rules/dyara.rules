@@ -76,6 +76,8 @@ rule dream_yara_map_se:
         "{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam"
     log:
         "{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam.log"
+    benchmark:
+        "{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam.bench"
     params:
         idir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["dmappers"]["dyara_" + wildcards.config]

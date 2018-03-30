@@ -24,6 +24,8 @@ rule gem_map_se:
         "{prefix}/{reads}.{reference}.gem_{config}.bam"
     log:
         "{prefix}/{reads}.{reference}.gem_{config}.bam.log"
+    benchmark:
+        "{prefix}/{reads}.{reference}.gem_{config}.bam.bench"
     params:
         misc=lambda wildcards: config["mappers"]["gem_" + wildcards.config]
     shell:
