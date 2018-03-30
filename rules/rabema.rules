@@ -18,13 +18,13 @@ rule rabema_prepare:
 rule rabema_gold:
     input:
         ref="{prefix}/{reference}.fasta",
-        bam="{prefix}/{reads}#{part}.{reference}.{gold}.prep.coord.bam"
+        bam="{prefix}/{reads}#{part}.{reference}.razers3_gold_prep.coord.bam"
     output:
-        temp("{prefix}/{reads}#{part}.{reference}.{gold}.{errors}.gsi")
+        temp("{prefix}/{reads}#{part}.{reference}.{errors}.gsi")
     wildcard_constraints:
         reads="[A-Za-z0-9_]+"
     log:
-        "{prefix}/{reads}#{part}.{reference}.{gold}.{errors}.gsi.log"
+        "{prefix}/{reads}#{part}.{reference}.{errors}.gsi.log"
     shell:
         "rabema_build_gold_standard --version-check OFF "
         "--max-error {wildcards.errors} --distance-metric edit "
@@ -35,16 +35,16 @@ rule rabema_gold:
 
 rule rabema_gold_merge:
     input:
-        first=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{gold}}.{{errors}}.gsi",
+        first=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
                      part=make_parts(config.get("parts", 1)))[0],
-        other=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{gold}}.{{errors}}.gsi",
+        other=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
                      part=make_parts(config.get("parts", 1)))[1:]
     output:
-        protected("{prefix}/{reads}.{reference}.{gold}.{errors}.gsi.gz")
+        protected("{prefix}/{reads}.{reference}.{errors}.gsi.gz")
     wildcard_constraints:
         reads="[A-Za-z0-9_]+"
     log:
-        "{prefix}/{reads}.{reference}.{gold}.{errors}.gsi.log"
+        "{prefix}/{reads}.{reference}.{errors}.gsi.log"
     shell:
         "gzip -c {input.first} > {output} && tail -q -n +4 {input.other} | gzip -c >> {output}"
 
