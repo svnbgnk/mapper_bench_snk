@@ -69,12 +69,12 @@ rule index:
             reference=get_references(), 
             indexer=config["dindexers"].keys(),
             bin_methods=config["bin_methods"],
-            num_bins=config["num_bins"]),
+            num_bins=config["num_bins"][0]),
         ibf=expand("data/{reference}.{indexer}_{bin_methods}_{num_bins}.filter",
             reference=get_references(), 
             indexer=config["ibf_indexers"].keys(),
             bin_methods=config["bin_methods"],
-            num_bins=config["num_bins"])
+            num_bins=config["num_bins"][0])
 
 rule index_update:
     input:
@@ -115,13 +115,13 @@ rule evaluate:
         std=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}.{errors}.{category}.rabema_report_tsv",
                     mapper=config["mappers"].keys(),
                     bin_methods=config["bin_methods"],
-                    num_bins=config["num_bins"],
+                    num_bins=config["num_bins"][0],
                     errors="5",
                     category="all-best"),
         dis=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}_{bin_methods}_{num_bins}.{errors}.{category}.rabema_report_tsv",
                     mapper=config["dmappers"].keys(),
                     bin_methods=config["bin_methods"],
-                    num_bins=config["num_bins"],
+                    num_bins=config["num_bins"][0],
                     errors="5",
                     category="all-best")
 
