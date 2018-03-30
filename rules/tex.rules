@@ -35,6 +35,8 @@ rule indexer_table:
     input:
         std_index_res=expand("{{prefix}}/{{reference}}.{indexer}.index.res",
                 indexer=config["indexers"].keys()),
+        std_index_up_res_dida=expand("{{prefix}}/{{reference}}.{indexer}.index_up.res",
+                indexer="didabwa"),
         dis_index_res=expand("{{prefix}}/{{reference}}.{indexer}_{meth}_{num_bins}.index.res",
                 indexer=config["dindexers"].keys(),
                 meth=config["bin_methods"],
