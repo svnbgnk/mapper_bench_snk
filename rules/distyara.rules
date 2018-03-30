@@ -41,11 +41,12 @@ rule dist_yara_map_se:
         num_bins="{num_bins}",
         index_dir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["mappers"]["yara_" + wildcards.config],
-        tmp_bam="{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam",
+        tmp_bam_head="{prefix}/header.head",
     shell:
         "mkdir -p {params.out_dir}; "
         "command time -f 'RES:%e\\t%M\\t%P' "
         "sh -c 'seq 0 $(({params.num_bins}-1)) | xargs -I {{}} "
         "sh -c \" ./bin/yara_mapper {params.misc} --output-file {params.out_dir}{{}}.bam {params.index_dir}{{}} {input.rd} > {params.out_dir}{{}}.log 2>&1 \" ' > {log} 2>&1 ;"
-        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} ./bin/samtools view -H {params.out_dir}{{}}.bam | grep @SQ | awk -F\":|\\t\" '{{print $3\"\\t\"$5}}' > header.h; "
-        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} ./bin/samtools view -@ {params.num_threads} -F 4 {params.out_dir}{{}}.bam | ./bin/samtools view -b -t header.h - > {output}"
+        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} ./bin/samtools view -H {params.out_dir}{{}}.bam | grep @SQ | awk -F\":|\\t\" '{{print $3\"\\t\"$5}}' > {params.tmp_bam_head}; "
+        "seq 0 $(({params.num_bins}-1)) | xargs -I {{}} ./bin/samtools view -@ {params.num_threads} -F 4 {params.out_dir}{{}}.bam | ./bin/samtools view -b -t {params.tmp_bam_head} - > {output} ;"
+        "rm {params.tmp_bam_head}; rm -rf {params.out_dir}"
