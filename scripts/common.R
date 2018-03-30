@@ -44,7 +44,7 @@ RABEMA_LABEL = c('all-best'='Co-opt.',all='Subopt.')
 
 MAPPERS_LABEL = c(
     yara_rabema="Yara [s=0]",
-    didabwa="DIDA-BWA",
+    didabwa_rabema="DIDA-BWA",
     dyara_rabema_taxo_1024="Dream Yara [s=0]",
     dyara_rabema_taxo_256="Dream Yara [s=0]",
     dyara_rabema_taxo_64="Dream Yara [s=0]",
