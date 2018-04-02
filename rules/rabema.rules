@@ -26,7 +26,7 @@ rule rabema_gold:
     log:
         "{prefix}/{reads}#{part}.{reference}.{errors}.gsi.log"
     shell:
-        "rabema_build_gold_standard --version-check OFF "
+        "rabema_build_gold_standard "
         "--max-error {wildcards.errors} --distance-metric edit "
         "--reference {input.ref} --in-bam {input.bam} "
         "--out-gsi {output} "
