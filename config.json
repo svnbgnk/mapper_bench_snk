@@ -40,7 +40,6 @@
         "bwa_rabema": "-a"
     },
     "mappers": {
-        "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
         "yara_rabema": "--threads 8 --error-rate 4 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
         "gem_rabema": "--threads 8 --quality-format ignore -m 0.04 -e 0.04 ",
         "bowtie2_rabema": "--threads 8 -k 100 --end-to-end",
