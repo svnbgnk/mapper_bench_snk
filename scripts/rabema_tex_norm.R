@@ -1,4 +1,4 @@
-source(file="scripts/rabema.R")
+source(file="scripts/rabema_norm.R")
 
 #output = {prefix}/{reads}_{limit}_{suffix}.{reference}.{gold}.{errors}.{category}.tex
 

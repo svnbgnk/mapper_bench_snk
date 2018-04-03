@@ -85,8 +85,8 @@ write_table <- function(tex_out)
                         {
                             print(paste("read",RABEMA_FILE))
                             raw.data <- read.delim(RABEMA_FILE, comment.char="#", header=FALSE, col.names=c("error_rate","num_max","num_found","percent_found","norm_max","norm_found","percent_norm_found"))
-                            sens_per_error <- raw.data$num_found / raw.data$num_max
-                            x <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)
+                            sens_per_error <- raw.data$norm_found / raw.data$norm_max
+                            x <- colorize(sum(raw.data$norm_found) / sum(raw.data$norm_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$norm_found)), no=""), enableColors)
                             
                             if (extraColumn)
                             {
@@ -110,10 +110,10 @@ write_table <- function(tex_out)
                                         #if (err == MAX_ERRORS)
                                         #    to_err = from_err + 1
                                         X=subset(raw.data, from_err < error_rate & error_rate <= to_err)
-                                        if (nrow(X) == 1 && X$num_max != 0)
+                                        if (nrow(X) == 1 && X$norm_max != 0)
                                         {
-											text = ifelse(absoluteNumbers, yes=round(X$num_found), no="")
-											s = paste(s, colorize(X$num_found / X$num_max, text, enableColors))
+											text = ifelse(absoluteNumbers, yes=round(X$norm_found), no="")
+											s = paste(s, colorize(X$norm_found / X$norm_max, text, enableColors))
 										}
 										else
 											s = paste(s, '--')
