@@ -130,7 +130,7 @@ write_table <- function(tex_out)
                             if(REPORT_ABSOLUTE)
                             {
                                 s <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)
-                                x = paste(x, s)
+                                x = paste(x, s, sep="")
                         
                                 if (extraColumn)
                                 {
@@ -178,6 +178,7 @@ write_table <- function(tex_out)
                         }
                         colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
                         colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
+
                         if(REPORT_ABSOLUTE)
                         {
                             unit = gsub("Normalized", "Absolute", unit)
