@@ -130,6 +130,7 @@ write_table <- function(tex_out)
                             if(REPORT_ABSOLUTE)
                             {
                                 line = c(line, x)
+                                align = paste(align, "l", sep='')
                                 x <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)                        
                                 if (extraColumn)
                                 {
