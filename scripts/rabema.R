@@ -129,9 +129,8 @@ write_table <- function(tex_out)
 
                             if(REPORT_ABSOLUTE)
                             {
-                                s <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)
-                                x = paste(x, s, sep="")
-                        
+                                line = c(line, x)
+                                x <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)                        
                                 if (extraColumn)
                                 {
                                     s = paste("{\\subcolbeg\\begin{tabular}{", paste(rep("r",SUBCOLUMNS), collapse=""), "}", sep="")
