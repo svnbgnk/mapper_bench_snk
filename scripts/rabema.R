@@ -74,7 +74,7 @@ write_table <- function(tex_out)
                         extraColumn = grepl("^R[a|r]x_", col)
                         subexp = sub("^R[a|r]x?_", "", col)
                         colname = paste(RABEMA_LABEL[[subexp]], "locations")
-                        unit = ifelse(absoluteNumbers, yes="", no="[\\%]")
+                        unit = ifelse(absoluteNumbers, yes="", no="[\\% Normalized]")
                         align = paste(align, ifelse(absoluteNumbers, yes="r", no="c"), sep='')
                         
                         # ABSim_10000.A_B_refseq_20170926.yara_default.5.all-best.rabema_report_tsv
@@ -181,7 +181,7 @@ write_table <- function(tex_out)
 
                         if(REPORT_ABSOLUTE)
                         {
-                            unit = gsub("Normalized", "Absolute", unit)
+                            unit = ifelse(absoluteNumbers, yes="", no="[\\% Absolute]")
                             colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
                             colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
                         }
