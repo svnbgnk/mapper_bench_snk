@@ -176,14 +176,17 @@ write_table <- function(tex_out)
                             print(paste("skip",RABEMA_FILE))
                             x = "--"
                         }
-                        colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
-                        colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
-
-                        if(REPORT_ABSOLUTE)
+                        if(!REPORT_ABSOLUTE)
                         {
-                            unit = ifelse(absoluteNumbers, yes="", no="[\\% Absolute]")
                             colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
                             colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
+                        }
+                        else
+                        {
+                            unit2 = ifelse(absoluteNumbers, yes="", no="[\\% Absolute]")
+                            colheaders = paste(colheaders, "&\\multicolumn{2}{c}{", prefix_headers, colname, "}")
+                            colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
+                            colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit2, "}")
                         }
                     }
 
