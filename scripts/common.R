@@ -40,7 +40,7 @@ PALETTE   = colorRamp(COLS, space = "rgb")
 #ACCURACY_OFFICIAL = c(sens='Sensitivity', spec='Specificity')
 
 MODE_LABEL = c(default="default",rabema="all-best",build="build")
-RABEMA_LABEL = c('all-best'='Co-opt.',all='Subopt.')
+RABEMA_LABEL = c('all-best'='Co-optimal',all='Subopt.')
 
 MAPPERS_LABEL = c(
     yara_rabema="Yara [s=0]",
