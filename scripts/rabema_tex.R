@@ -23,5 +23,6 @@ MODE2MAPPERS = list(
 )
 
 COLUMNS = c(paste("Rrx", category, sep="_"),"P_throughput","P_memory")
+REPORT_ABSOLUTE = TRUE 
 
 write_table(tex_out)

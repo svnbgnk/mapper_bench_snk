@@ -22,6 +22,7 @@ MODE2MAPPERS = list(
     rabema = c("distyara_rabema_taxo_1024","dyara_rabema_taxo_1024","yara_rabema","gem_rabema","bowtie2_rabema","bwa_rabema", "didabwa_rabema")
 )
 
-COLUMNS = c(paste("Rrx", category, sep="_"),"P_throughput","P_memory")
+COLUMNS = c(paste("Rrx", category, sep="_"), "P_throughput","P_memory")
+REPORT_ABSOLUTE = TRUE 
 
 write_table(tex_out)

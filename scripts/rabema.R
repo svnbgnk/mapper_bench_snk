@@ -75,6 +75,7 @@ write_table <- function(tex_out)
                         subexp = sub("^R[a|r]x?_", "", col)
                         colname = paste(RABEMA_LABEL[[subexp]], "locations")
                         unit = ifelse(absoluteNumbers, yes="", no="[\\%]")
+                        unit = paste(unit, "Normalized")
                         align = paste(align, ifelse(absoluteNumbers, yes="r", no="c"), sep='')
                         
                         # ABSim_10000.A_B_refseq_20170926.yara_default.5.all-best.rabema_report_tsv
@@ -85,8 +86,8 @@ write_table <- function(tex_out)
                         {
                             print(paste("read",RABEMA_FILE))
                             raw.data <- read.delim(RABEMA_FILE, comment.char="#", header=FALSE, col.names=c("error_rate","num_max","num_found","percent_found","norm_max","norm_found","percent_norm_found"))
-                            sens_per_error <- raw.data$num_found / raw.data$num_max
-                            x <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)
+                            sens_per_error <- raw.data$norm_found / raw.data$norm_max
+                            x <- colorize(sum(raw.data$norm_found) / sum(raw.data$norm_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$norm_found)), no=""), enableColors)
                             
                             if (extraColumn)
                             {
@@ -110,10 +111,10 @@ write_table <- function(tex_out)
                                         #if (err == MAX_ERRORS)
                                         #    to_err = from_err + 1
                                         X=subset(raw.data, from_err < error_rate & error_rate <= to_err)
-                                        if (nrow(X) == 1 && X$num_max != 0)
+                                        if (nrow(X) == 1 && X$norm_max != 0)
                                         {
-											text = ifelse(absoluteNumbers, yes=round(X$num_found), no="")
-											s = paste(s, colorize(X$num_found / X$num_max, text, enableColors))
+											text = ifelse(absoluteNumbers, yes=round(X$norm_found), no="")
+											s = paste(s, colorize(X$norm_found / X$norm_max, text, enableColors))
 										}
 										else
 											s = paste(s, '--')
@@ -121,9 +122,52 @@ write_table <- function(tex_out)
                                     if (k == ceiling(MAX_ERRORS / SUBCOLUMNS))
                                         s = paste(s, "\\subcolvspace", sep="")
                                     s = paste(s, "\\\\", sep="")
-                                }
-                                s = paste(s, "\\end{tabular}\\subcolend}", sep="")
+                            }
+                            s = paste(s, "\\end{tabular}\\subcolend}", sep="")
+                            x = paste(x, s)
+                             
+                            if(REPORT_ABSOLUTE)
+                            {
+                                s <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)
                                 x = paste(x, s)
+                        
+                                if (extraColumn)
+                                {
+                                    s = paste("{\\subcolbeg\\begin{tabular}{", paste(rep("r",SUBCOLUMNS), collapse=""), "}", sep="")
+                                    
+                                    for (k in seq(ceiling(MAX_ERRORS / SUBCOLUMNS)))
+                                    {
+                                        for (l in seq(SUBCOLUMNS))
+                                        {
+                                            # output separate sensitivities for errors=0,..,5
+                                            err = (k - 1) * SUBCOLUMNS + (l - 1)
+                                            if (err > MAX_ERRORS)
+                                                next
+                                            
+                                            if (l > 1)
+                                                s = paste(s, "&")
+                                            # from_err = (err - 1) * READ_LENGTHS[io] / 100.0;
+                                            # to_err   =  err      * READ_LENGTHS[io] / 100.0;
+                                            from_err = (err - 1) ;
+                                            to_err   =  err      ;
+                                            #if (err == MAX_ERRORS)
+                                            #    to_err = from_err + 1
+                                            X=subset(raw.data, from_err < error_rate & error_rate <= to_err)
+                                            if (nrow(X) == 1 && X$num_max != 0)
+                                            {
+                                                text = ifelse(absoluteNumbers, yes=round(X$num_found), no="")
+                                                s = paste(s, colorize(X$num_found / X$num_max, text, enableColors))
+                                            }
+                                            else
+                                                s = paste(s, '--')
+                                        }
+                                        if (k == ceiling(MAX_ERRORS / SUBCOLUMNS))
+                                            s = paste(s, "\\subcolvspace", sep="")
+                                        s = paste(s, "\\\\", sep="")
+                                    }
+                                    s = paste(s, "\\end{tabular}\\subcolend}", sep="")
+                                    x = paste(x, s)
+                                }
                             }
                         }
                         else
@@ -133,6 +177,13 @@ write_table <- function(tex_out)
                         }
                         colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
                         colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
+                        
+                        if(REPORT_ABSOLUTE)
+                        {
+                            unit = gsub("Normalized", "Absolute", unit)
+                            colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
+                            colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
+                        }
                     }
 
 
