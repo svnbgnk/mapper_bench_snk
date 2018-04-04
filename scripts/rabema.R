@@ -75,7 +75,6 @@ write_table <- function(tex_out)
                         subexp = sub("^R[a|r]x?_", "", col)
                         colname = paste(RABEMA_LABEL[[subexp]], "locations")
                         unit = ifelse(absoluteNumbers, yes="", no="[\\%]")
-                        unit = paste(unit, "Normalized")
                         align = paste(align, ifelse(absoluteNumbers, yes="r", no="c"), sep='')
                         
                         # ABSim_10000.A_B_refseq_20170926.yara_default.5.all-best.rabema_report_tsv
@@ -100,7 +99,7 @@ write_table <- function(tex_out)
                                         # output separate sensitivities for errors=0,..,5
                                         err = (k - 1) * SUBCOLUMNS + (l - 1)
                                         if (err > MAX_ERRORS)
-                                        	next
+                                            next
                                         
                                         if (l > 1)
                                             s = paste(s, "&")
@@ -113,19 +112,21 @@ write_table <- function(tex_out)
                                         X=subset(raw.data, from_err < error_rate & error_rate <= to_err)
                                         if (nrow(X) == 1 && X$norm_max != 0)
                                         {
-											text = ifelse(absoluteNumbers, yes=round(X$norm_found), no="")
-											s = paste(s, colorize(X$norm_found / X$norm_max, text, enableColors))
-										}
-										else
-											s = paste(s, '--')
+                                            text = ifelse(absoluteNumbers, yes=round(X$norm_found), no="")
+                                            s = paste(s, colorize(X$norm_found / X$norm_max, text, enableColors))
+                                        }
+                                        else
+                                            s = paste(s, '--')
                                     }
                                     if (k == ceiling(MAX_ERRORS / SUBCOLUMNS))
                                         s = paste(s, "\\subcolvspace", sep="")
                                     s = paste(s, "\\\\", sep="")
+                                }
+                                s = paste(s, "\\end{tabular}\\subcolend}", sep="")
+                                x = paste(x, s)
                             }
-                            s = paste(s, "\\end{tabular}\\subcolend}", sep="")
-                            x = paste(x, s)
-                             
+
+
                             if(REPORT_ABSOLUTE)
                             {
                                 s <- colorize(sum(raw.data$num_found) / sum(raw.data$num_max), ifelse(absoluteNumbers, yes=round(sum(raw.data$num_found)), no=""), enableColors)
@@ -168,7 +169,7 @@ write_table <- function(tex_out)
                                     s = paste(s, "\\end{tabular}\\subcolend}", sep="")
                                     x = paste(x, s)
                                 }
-                            }
+                            }                           
                         }
                         else
                         {
@@ -177,7 +178,6 @@ write_table <- function(tex_out)
                         }
                         colheaders = paste(colheaders, "&\\multicolumn{1}{c}{", prefix_headers, colname, "}")
                         colheaders_units = paste(colheaders_units, "&\\multicolumn{1}{c}{", prefix_units, unit, "}")
-                        
                         if(REPORT_ABSOLUTE)
                         {
                             unit = gsub("Normalized", "Absolute", unit)
