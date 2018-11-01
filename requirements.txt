@@ -3,7 +3,7 @@
 python=3.5.1
 ftputil=3.2
 pyyaml=3.11
-requests=2.9.1
+requests=2.20.0
 drmaa=0.7.6
 graphviz=2.38.0
 snakemake=3.10.1
