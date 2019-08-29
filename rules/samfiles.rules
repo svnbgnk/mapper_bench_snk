@@ -14,15 +14,26 @@ rule bam_index:
     shell:
         "samtools index {input}"
 
-rule bam_sort_coord:
+#rule bam_sort_coord:
+#    input:
+#        "{prefix}.bam"
+#    output:
+#        "{prefix}.coord.bam"
+#    params:
+#        n_threads=config["num_threads"],
+#    shell:
+#        "./bin/samtools sort -@ {params.n_threads} {input} {wildcards.prefix}.coord"
+
+rule sam_sort_coord_bam:
     input:
-        "{prefix}.bam"
+        "{prefix}.sam"
     output:
         "{prefix}.coord.bam"
     params:
         n_threads=config["num_threads"],
     shell:
-        "./bin/samtools sort -@ {params.n_threads} {input} {wildcards.prefix}.coord"
+        "samtools sort -@ {params.n_threads} {input} -o {wildcards.prefix}.coord.bam"
+#       "./bin/samtools sort -@ {params.n_threads} {input} {wildcards.prefix}.coord"
 
 
 rule bam_sort_name:

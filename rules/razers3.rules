@@ -8,11 +8,11 @@ rule razers3_map_gold_unprep:
         "{prefix}/{reference}.fasta",
         "{prefix}/{reads}.fastq"
     output:
-        "{prefix}/{reads}.{reference}.razers3_gold_unprep.bam"
+        "{prefix}/{reads}.{reference}.razers3_gold_unprep.qname.sam"
     log:
-        "{prefix}/{reads}.{reference}.razers3_gold_unprep.bam.log"
+        "{prefix}/{reads}.{reference}.razers3_gold_unprep.qname.sam.log"
     params:
         config["razers3_gold_param"]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/razers3 {params} --output {output} {input} 2> {log}"

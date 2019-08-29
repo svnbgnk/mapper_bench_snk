@@ -8,9 +8,9 @@ def make_parts(p):
     return [str(x).zfill(int(ceil(log10(p)))) for x in range(0, p)]
 rule rabema_prepare:
     input:
-        temp("{prefix}.razers3_gold_unprep.qname.bam")
+        temp("{prefix}.razers3_gold_unprep.qname.sam")
     output:
-        temp("{prefix}.razers3_gold_prep.bam")
+        temp("{prefix}.razers3_gold_prep.sam")
     shell:
         "./bin/rabema_prepare_sam -i {input} -o {output}"
 
