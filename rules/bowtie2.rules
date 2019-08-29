@@ -12,7 +12,7 @@ rule bowtie2_index:
     params:
         misc=config["indexers"]["bowtie2"]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/bowtie2-build {params.misc} {input} {output} > {log} 2>&1 "
 
 
@@ -32,6 +32,6 @@ rule bowtie2_map_se:
         num_threads=config["num_threads"],
         misc=lambda wildcards: config["mappers"]["bowtie2_" + wildcards.config]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/bowtie2 -x {input.idx} -U {input.fq} {params.misc} --rg-id none --rg SM:none 2> {log} | "
         "./bin/samtools view -@ {params.num_threads} -bS - > {output} "

@@ -13,10 +13,10 @@ rule dream_yara_index_ibf_update:
         num_threads=config["num_threads"],
         idir="{prefix}_{meth}_{num_bins}_up/"
     log:
-        "{prefix}.dyara_{meth}_{num_bins}.ibf_up.log",
+        "{prefix}.{indexer}.dyara_{meth}_{num_bins}.ibf_up.log",
     shell:
         "cp {input.old_filter} {output}; "
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_update_filter  --threads {params.num_threads} {output} {params.idir}*.fasta 2> {log};"
 
 rule dream_yara_index_fm_update:
@@ -25,11 +25,12 @@ rule dream_yara_index_fm_update:
     output:
         log="{prefix}.dyara_{meth}_{num_bins}.index_up.log",
         odir="{prefix}.dyara_{meth}_{num_bins}.indices_up/"
+#        odir=directory("{prefix}.dyara_{meth}_{num_bins}.indices_up/")
     params:
         idir="{prefix}_{meth}_{num_bins}_up/",
         misc=config["dindexers"]["dyara"]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_indexer_dis {params.misc} --output-prefix {output.odir} {params.idir}/*.fasta &> {output.log}; "
 
 
@@ -45,9 +46,9 @@ rule dream_yara_index_ibf:
         idir="{prefix}_{meth}_{num_bins}/",
         misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
     log:
-        "{prefix}.dyara_{meth}_{num_bins}.ibf.log",
+        "{prefix}.{indexer}.dyara_{meth}_{num_bins}.ibf.log",
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_build_filter --number-of-bins {params.num_bins} {params.misc} --output-file {output} {params.idir} 2> {log};"
 
 rule dream_yara_index_fm:
@@ -55,12 +56,13 @@ rule dream_yara_index_fm:
         "{prefix}_{meth}_{num_bins}/ref_{num_bins}"
     output:
         log="{prefix}.dyara_{meth}_{num_bins}.index.log",
+#        odir=directory("{prefix}.dyara_{meth}_{num_bins}.indices/")
         odir="{prefix}.dyara_{meth}_{num_bins}.indices/"
     params:
         idir="{prefix}_{meth}_{num_bins}/",
         misc=config["dindexers"]["dyara"]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_indexer_dis {params.misc} --output-prefix {output.odir} {params.idir}/*.fasta &> {output.log}; "
 
 
@@ -82,5 +84,5 @@ rule dream_yara_map_se:
         idir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["dmappers"]["dyara_" + wildcards.config]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_mapper_dis {params.misc} --output-file {output} --bloom-filter {input.ibf} {params.idir} {input.read} 2> {log}; "

@@ -21,14 +21,14 @@ include: "rules/tex.rules"
 
 include: "rules/razers3.rules"
 
-include: "rules/didabwa.rules"
-include: "rules/yara.rules"
+#include: "rules/didabwa.rules"
+#include: "rules/yara.rules"
 include: "rules/dyara.rules"
 include: "rules/distyara.rules"
 
-include: "rules/gem.rules"
+#include: "rules/gem.rules"
 include: "rules/bowtie2.rules"
-include: "rules/bwa.rules"
+#include: "rules/bwa.rules"
 
 # ruleorder: bam_sort_name > rabema_prepare > razers3_map_se > razers3_map_se_parts
 # === Functions

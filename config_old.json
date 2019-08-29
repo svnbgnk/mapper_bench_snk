@@ -1,5 +1,6 @@
 {
     "jobs": [
+#         ["A_B_refseq_20170926", "SRR6504858", 40000000]
         ["A_B_refseq_sample", "ABSim100K", 10000],
     ],
     "jobs_DISABLED": [
@@ -36,18 +37,31 @@
         "SRR6504858": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR650/008/SRR6504858/SRR6504858_1.fastq.gz"
     },
     "mappers_bkp": {
+#        "didabwa_rabema": "--threads 8 --alen 19 --bmer 19 --step 1 --fq --se ",
+#        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
+#        "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 300 --end-to-end",
+#        "bwa_rabema": "-a"
     },
     "mappers": {
+#        "yara_rabema": "--threads 8 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v",
+#        "gem_rabema": "--threads 8 --quality-format ignore -m 0.05 -e 0.05 ",
         "bowtie2_rabema": "--threads 8 -k 300 --end-to-end",
+#        "bwa_rabema": "-t 8 -a"
     },
     "dmappers": {
         "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
     },
     "dmappers_bkp": {
+#        "distyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
+#        "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
     },
     "indexers": {
+#        "didabwa": " ",
+#        "yara": "--version-check OFF -v",
         "bowtie2": "--threads 8",
+#        "gem": "--threads 8",
+#        "bwa": "-a bwtsw"
     },
     "dindexers": {
         "dyara": "--version-check OFF -v --threads 8"
