@@ -14,5 +14,5 @@ rule razers3_map_gold_unprep:
     params:
         config["razers3_gold_param"]
     shell:
-        "command time -f 'RES:%e\\t%M\\t%P' "
+#        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/razers3 {params} --output {output} {input} 2> {log}"
