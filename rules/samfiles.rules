@@ -34,6 +34,7 @@ rule bam_sort_name:
         n_threads=config["num_threads"],
     shell:
         "./bin/samtools sort -@ {params.n_threads} -n {input} {wildcards.prefix}.qname"
+#        "samtools sort -@ {params.n_threads} -n {input} -o {wildcards.prefix}.qname.bam"
 
 
 # rule sam_to_bam:

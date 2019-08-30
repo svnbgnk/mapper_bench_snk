@@ -40,6 +40,38 @@ rule rabema_gold_merge:
         other=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
                      part=make_parts(config.get("parts", 1)))[1:]
     output:
+        "{prefix}/{reads}.{reference}.{errors}.merge.gsi"
+    wildcard_constraints:
+        reads="[A-Za-z0-9_]+"
+    log:
+        "{prefix}/{reads}.{reference}.{errors}.merge.gsi.log"
+    shell:
+        "cat {input.first} > {output} && tail -q -n +4 {input.other} >> {output}"
+#        "gzip -c {input.first} > {output} && tail -q -n +4 {input.other} | gzip -c >> {output}"
+
+
+rule rabema_gold_sort_merged:
+    input:
+        "{prefix}/{reads}.{reference}.{errors}.merge.gsi"
+    output:
+        "{prefix}/{reads}.{reference}.{errors}.gsi.gz"
+    wildcard_constraints:
+        reads="[A-Za-z0-9_]+"
+    log:
+        "{prefix}/{reads}.{reference}.{errors}.gsi.log"
+    shell:
+        "cat {input} | sed -e 's/AB_refseq.R/AB_refseq.R\t/g ; s/AB_refseq.L/AB_refseq.L\t/g ; s/@/00pp/g ; s/#/0ppp/g ' | sort -k1,1 -k2n,2 -k3,3 | sed -e 's/AB_refseq.R\s/AB_refseq.R/g ; s/AB_refseq.L\s/AB_refseq.L/g ; s/00pp/@/g ; s/0ppp/#/g' | gzip -c >> {output}"
+#        "gzip -c {input.first} > {output} && tail -q -n +4 {input.other} | gzip -c >> {output}"
+
+'''
+
+rule rabema_gold_merge:
+    input:
+        first=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
+                     part=make_parts(config.get("parts", 1)))[0],
+        other=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
+                     part=make_parts(config.get("parts", 1)))[1:]
+    output:
         protected("{prefix}/{reads}.{reference}.{errors}.gsi.gz")
     wildcard_constraints:
         reads="[A-Za-z0-9_]+"
@@ -48,6 +80,9 @@ rule rabema_gold_merge:
     shell:
         "gzip -c {input.first} > {output} && tail -q -n +4 {input.other} | gzip -c >> {output}"
 
+
+
+'''
 
 # rule rabema_gold:
 #     input:

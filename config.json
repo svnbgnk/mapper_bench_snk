@@ -36,7 +36,6 @@
         "SRR6504858": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR650/008/SRR6504858/SRR6504858_1.fastq.gz"
     },
     "mappers_bkp": {
-        "bowtie2_rabema": "--threads 8 -k 300 --end-to-end",
     },
     "mappers": {
         "bowtie2_rabema": "--threads 8 -k 300 --end-to-end",
