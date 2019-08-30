@@ -51,6 +51,7 @@
     },
     "dmappers": {
         "dyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v "
+	"mapmap_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 -s 0 --secondary-alignments record --rabema-alignments --version-check OFF -v "
     },
     "dmappers_bkp": {
 #        "distyara_rabema": "--threads 8 --filter-type bloom --reads-batch 1000000 --error-rate 5 --secondary-alignments record --rabema-alignments --sensitivity full --version-check OFF -v ",
@@ -65,9 +66,11 @@
     },
     "dindexers": {
         "dyara": "--version-check OFF -v --threads 8"
+#	"mapmap": "--version-check OFF -v --threads 8"
     },
     "ibf_indexers": {
         "dyara": "--threads 8 --kmer-size 18 --filter-type bloom --bloom-size 16 --num-hash 3 --version-check OFF -v "
+#        "mapmap": "--threads 8 --kmer-size 18 --filter-type bloom --bloom-size 16 --num-hash 3 --version-check OFF -v "
     },
     "num_bins": ["1024"],
     "num_bins_bkp": ["1024", "256", "64"],

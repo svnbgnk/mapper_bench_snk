@@ -44,12 +44,32 @@ rule dream_yara_index_ibf:
     params:
         num_bins="{num_bins}",
         idir="{prefix}_{meth}_{num_bins}/",
-        misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
+        misc=config["dindexers"][dyara]
+#        misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
     log:
         "{prefix}.{indexer}.dyara_{meth}_{num_bins}.ibf.log",
     shell:
 #        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_build_filter --number-of-bins {params.num_bins} {params.misc} --output-file {output} {params.idir} 2> {log};"
+
+rule mapmap_index_ibf:
+    input:
+        "{prefix}_{meth}_{num_bins}/ref_{num_bins}"
+    output:
+        "{prefix}.{indexer}_{meth}_{num_bins}.filter"
+    wildcard_constraints:
+        num_bins="\d+."
+    params:
+        num_bins="{num_bins}",
+        idir="{prefix}_{meth}_{num_bins}/",
+        misc=config["dindexers"][mapmap]
+#        misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
+    log:
+        "{prefix}.{indexer}.mapmap_{meth}_{num_bins}.ibf.log",
+    shell:
+#        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/dream_yara_build_filter --number-of-bins {params.num_bins} {params.misc} --output-file {output} {params.idir} 2> {log};"
+
 
 rule dream_yara_index_fm:
     input:
@@ -65,6 +85,19 @@ rule dream_yara_index_fm:
 #        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_indexer_dis {params.misc} --output-prefix {output.odir} {params.idir}/*.fasta &> {output.log}; "
 
+rule mapmap_yara_index_fm:
+    input:
+        "{prefix}_{meth}_{num_bins}/ref_{num_bins}"
+    output:
+        log="{prefix}.mapmap_{meth}_{num_bins}.index.log",
+#        odir=directory("{prefix}.mapmap_{meth}_{num_bins}.indices/")
+        odir="{prefix}.mapmap_{meth}_{num_bins}.indices/"
+    params:
+        idir="{prefix}_{meth}_{num_bins}/",
+        misc=config["dindexers"]["mapmap"]
+    shell:
+#        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/yara_indexer_dis {params.misc} --output-prefix {output.odir} {params.idir}/*.fasta &> {output.log}; "
 
 
 rule dream_yara_map_se:
@@ -86,3 +119,23 @@ rule dream_yara_map_se:
     shell:
 #        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_mapper_dis {params.misc} --output-file {output} --bloom-filter {input.ibf} {params.idir} {input.read} 2> {log}; "
+
+rule mapmap_yara_map_se:
+    input:
+        ibf="{prefix}/{reference}.mapmap_{meth}_{num_bins}.filter",
+        index="{prefix}/{reference}.mapmap_{meth}_{num_bins}.index.log",
+        read="{prefix}/{reads}.fastq"
+    wildcard_constraints:
+        config="[a-zA-Z0-9_]+"
+    output:
+        "{prefix}/{reads}.{reference}.mapmap_{config}_{meth}_{num_bins}.bam"
+    log:
+        "{prefix}/{reads}.{reference}.mapmap_{config}_{meth}_{num_bins}.bam.log"
+    benchmark:
+        "{prefix}/{reads}.{reference}.mapmap_{config}_{meth}_{num_bins}.bam.bench"
+    params:
+        idir="{prefix}/{reference}.mapmap_{meth}_{num_bins}.indices/",
+        misc=lambda wildcards: config["dmappers"]["mapmap_" + wildcards.config]
+    shell:
+#        "command time -f 'RES:%e\\t%M\\t%P' "
+        "./bin/dream_yara_mapper {params.misc} --output-file {output} --bloom-filter {input.ibf} {params.idir} {input.read} 2> {log}; "
