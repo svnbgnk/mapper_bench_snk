@@ -82,8 +82,9 @@ rule dream_yara_map_se:
     benchmark:
         "{prefix}/{reads}.{reference}.dyara_{config}_{meth}_{num_bins}.bam.bench"
     params:
+        num_bins="{num_bins}",
         idir="{prefix}/{reference}.dyara_{meth}_{num_bins}.indices/",
         misc=lambda wildcards: config["dmappers"]["dyara_" + wildcards.config]
     shell:
 #        "command time -f 'RES:%e\\t%M\\t%P' "
-        "./bin/yara_mapper_dis {params.misc} --output-file {output} --bloom-filter {input.ibf} {params.idir} {input.read} 2> {log}; "
+        "./bin/yara_mapper_dis {params.misc} --output-file {output} --bloom-filter {input.ibf} -b {params.num_bins} {params.idir} {input.read} 2> {log}; "
