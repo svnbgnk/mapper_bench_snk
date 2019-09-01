@@ -38,15 +38,16 @@ rule dream_yara_index_ibf:
     input:
         "{prefix}_{meth}_{num_bins}/ref_{num_bins}"
     output:
-        "{prefix}.{indexer}_{meth}_{num_bins}.filter"
+        "{prefix}.dyara_{meth}_{num_bins}.filter"
     wildcard_constraints:
         num_bins="\d+."
     params:
         num_bins="{num_bins}",
         idir="{prefix}_{meth}_{num_bins}/",
-        misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
+        misc=config["ibf_indexers"]["dyara"]
+#        misc=lambda wildcards: config["ibf_indexers"][wildcards.indexer]
     log:
-        "{prefix}.{indexer}.dyara_{meth}_{num_bins}.ibf.log",
+        "{prefix}.dyara_{meth}_{num_bins}.ibf.log",
     shell:
 #        "command time -f 'RES:%e\\t%M\\t%P' "
         "./bin/yara_build_filter --number-of-bins {params.num_bins} {params.misc} --output-file {output} {params.idir} 2> {log};"
