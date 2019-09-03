@@ -24,8 +24,8 @@ rule dream_yara_index_fm_update:
         "{prefix}_{meth}_{num_bins}_up/ref_up_{num_bins}"
     output:
         log="{prefix}.dyara_{meth}_{num_bins}.index_up.log",
-        odir="{prefix}.dyara_{meth}_{num_bins}.indices_up/"
-#        odir=directory("{prefix}.dyara_{meth}_{num_bins}.indices_up/")
+#        odir="{prefix}.dyara_{meth}_{num_bins}.indices_up/"
+        odir=directory("{prefix}.dyara_{meth}_{num_bins}.indices_up/")
     params:
         idir="{prefix}_{meth}_{num_bins}_up/",
         misc=config["dindexers"]["dyara"]
@@ -57,8 +57,8 @@ rule dream_yara_index_fm:
         "{prefix}_{meth}_{num_bins}/ref_{num_bins}"
     output:
         log="{prefix}.dyara_{meth}_{num_bins}.index.log",
-#        odir=directory("{prefix}.dyara_{meth}_{num_bins}.indices/")
-        odir="{prefix}.dyara_{meth}_{num_bins}.indices/"
+        odir=directory("{prefix}.dyara_{meth}_{num_bins}.indices/")
+#        odir="{prefix}.dyara_{meth}_{num_bins}.indices/"
     params:
         idir="{prefix}_{meth}_{num_bins}/",
         misc=config["dindexers"]["dyara"]

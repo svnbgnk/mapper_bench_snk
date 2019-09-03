@@ -24,8 +24,8 @@ rule mapmap_index_fm_update:
         "{prefix}_{meth}_{num_bins}_up/ref_up_{num_bins}"
     output:
         log="{prefix}.mapmap_{meth}_{num_bins}.index_up.log",
-        odir="{prefix}.mapmap_{meth}_{num_bins}.indices_up/"
-#        odir=directory("{prefix}.mapmap_{meth}_{num_bins}.indices_up/")
+#        odir="{prefix}.mapmap_{meth}_{num_bins}.indices_up/"
+        odir=directory("{prefix}.mapmap_{meth}_{num_bins}.indices_up/")
     params:
         idir="{prefix}_{meth}_{num_bins}_up/",
         misc=config["dindexers"]["mapmap"]
@@ -57,8 +57,8 @@ rule mapmap_index_fm:
         "{prefix}_{meth}_{num_bins}/ref_{num_bins}"
     output:
         log="{prefix}.mapmap_{meth}_{num_bins}.index.log",
-#        odir=directory("{prefix}.mapmap_{meth}_{num_bins}.indices/")
-        odir="{prefix}.mapmap_{meth}_{num_bins}.indices/"
+        odir=directory("{prefix}.mapmap_{meth}_{num_bins}.indices/")
+#        odir="{prefix}.mapmap_{meth}_{num_bins}.indices/"
     params:
         idir="{prefix}_{meth}_{num_bins}/",
         misc=config["dindexers"]["mapmap"]
