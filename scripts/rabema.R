@@ -17,7 +17,7 @@
 # The optional _bw suffix disables colored cells
 #
 
-source(file="scripts/common.R")
+source(file="./common.R")
 
 prefix_headers = ""
 prefix_units = "\\footnotesize"

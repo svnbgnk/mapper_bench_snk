@@ -8,9 +8,9 @@ def make_parts(p):
     return [str(x).zfill(int(ceil(log10(p)))) for x in range(0, p)]
 rule rabema_prepare:
     input:
-        temp("{prefix}.razers3_gold_unprep.qname.bam")
+        "{prefix}.razers3_gold_unprep.qname.sam"
     output:
-        temp("{prefix}.razers3_gold_prep.bam")
+        temp("{prefix}.razers3_gold_prep.sam")
     shell:
         "./bin/rabema_prepare_sam -i {input} -o {output}"
 
@@ -26,13 +26,13 @@ rule rabema_gold:
     log:
         "{prefix}/{reads}#{part}.{reference}.{errors}.gsi.log"
     shell:
-        "rabema_build_gold_standard "
+        "./bin/rabema_build_gold_standard "
         "--max-error {wildcards.errors} --distance-metric edit "
         "--reference {input.ref} --in-bam {input.bam} "
         "--out-gsi {output} "
         "2> {log}"
 
-
+'''
 rule rabema_gold_merge:
     input:
         first=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
@@ -60,9 +60,8 @@ rule rabema_gold_sort_merged:
     log:
         "{prefix}/{reads}.{reference}.{errors}.gsi.log"
     shell:
-        "cat {input} | sed -e 's/AB_refseq.R/AB_refseq.R\t/g ; s/AB_refseq.L/AB_refseq.L\t/g ; s/@/00pp/g ; s/#/0ppp/g ' | sort -k1,1 -k2n,2 -k3,3 | sed -e 's/AB_refseq.R\s/AB_refseq.R/g ; s/AB_refseq.L\s/AB_refseq.L/g ; s/00pp/@/g ; s/0ppp/#/g' | gzip -c >> {output}"
+        "cat {input} | sed -e 's/SRR6504858./SRR6504858.\t/g; s/@/00pp/g ; s/#/0ppp/g ' | sort -k1,1 -k2n,2 | sed -e 's/SRR6504858.\s/SRR6504858./g ; s/00pp/@/g ; s/0ppp/#/g' | gzip -c >> {output}"
 #        "gzip -c {input.first} > {output} && tail -q -n +4 {input.other} | gzip -c >> {output}"
-
 '''
 
 rule rabema_gold_merge:
@@ -72,7 +71,7 @@ rule rabema_gold_merge:
         other=expand("{{prefix}}/{{reads}}#{part}.{{reference}}.{{errors}}.gsi",
                      part=make_parts(config.get("parts", 1)))[1:]
     output:
-        protected("{prefix}/{reads}.{reference}.{errors}.gsi.gz")
+        "{prefix}/{reads}.{reference}.{errors}.gsi.gz"
     wildcard_constraints:
         reads="[A-Za-z0-9_]+"
     log:
@@ -82,7 +81,6 @@ rule rabema_gold_merge:
 
 
 
-'''
 
 # rule rabema_gold:
 #     input:
@@ -114,7 +112,7 @@ rule rabema_eval:
     shell:
         "./bin/rabema_evaluate --DONT-PANIC "
         "--max-error {wildcards.errors} --distance-metric edit --benchmark-category {wildcards.category} "
-        "--trust-NM --extra-pos-tag XP "
+        "--trust-NM --extra-pos-tag XP --show-missed-intervals "
         "--reference {input.ref} --in-bam {input.bam} --in-gsi {input.gsi} "
         "--out-tsv {output} 2> {log}"
 

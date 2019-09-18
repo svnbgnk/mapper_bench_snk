@@ -27,9 +27,9 @@ include: "rules/dyara.rules"
 include: "rules/mapmap.rules"
 include: "rules/distyara.rules"
 
-#include: "rules/gem.rules"
+include: "rules/gem.rules"
 include: "rules/bowtie2.rules"
-#include: "rules/bwa.rules"
+include: "rules/bwa.rules"
 
 # ruleorder: bam_sort_name > rabema_prepare > razers3_map_se > razers3_map_se_parts
 # === Functions
@@ -77,6 +77,19 @@ rule index:
             bin_methods=config["bin_methods"],
             num_bins=config["num_bins"][0])
 
+rule index2:
+    input:
+        dis=expand("data/{reference}.mapmap_{bin_methods}_{num_bins}.index.log",
+            reference=get_references(),
+            indexer=config["dindexers"].keys(),
+            bin_methods=config["bin_methods"],
+            num_bins=config["mapmap_num_bins"][0]),
+        ibf=expand("data/{reference}.mapmap_{bin_methods}_{num_bins}.filter",
+            reference=get_references(),
+            indexer=config["ibf_indexers"].keys(),
+            bin_methods=config["bin_methods"],
+            num_bins=config["mapmap_num_bins"][0])
+
 rule index_update:
     input:
         dis=expand("data/{reference}.{indexer}_{bin_methods}_{num_bins}.index_up.log",
@@ -104,7 +117,12 @@ rule map:
         dis=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}_{bin_methods}_{num_bins}.bam",
                     mapper=config["dmappers"].keys(),
                     bin_methods=config["bin_methods"],
-                    num_bins=config["num_bins"])
+                    num_bins=config["num_bins"])#,
+#        dis=expand_jobs("data/{reads}_{limit}.{reference}.mapmap_{bin_methods}_{num_bins}.bam",
+#                    mapper=config["dmappers"].keys(),
+#                    bin_methods=config["bin_methods"],
+#                    num_bins=config["mapmap_num_bins"])
+
 
 rule gold:
     input:
@@ -117,19 +135,19 @@ rule evaluate:
                     mapper=config["mappers"].keys(),
                     bin_methods=config["bin_methods"],
                     num_bins=config["num_bins"][0],
-                    errors="5",
+                    errors="3",
                     category="all-best"),
         dis=expand_jobs("data/{reads}_{limit}.{reference}.{mapper}_{bin_methods}_{num_bins}.{errors}.{category}.rabema_report_tsv",
                     mapper=config["dmappers"].keys(),
                     bin_methods=config["bin_methods"],
                     num_bins=config["num_bins"][0],
-                    errors="5",
+                    errors="3",
                     category="all-best")
 
 rule report:
     input:
         mapper=expand_jobs("data/{reads}_{limit}.{reference}.{errors}.{category}.pdf",
-                    errors="5",
+                    errors="3",
                     category="all-best")
 
 rule report_index:

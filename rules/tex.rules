@@ -7,8 +7,10 @@ rule rabema_resources:
     output:
         "{prefix}.res"
     shell:
-        "echo -e 'wc_time\\trss_mem_peak\\tperc_cpu' > {output}; "
-        "grep ^RES {input} | awk -F ':' '{{ print $2 }}' >> {output}"
+#        "echo -e 'wc_time\\trss_mem_peak\\tperc_cpu' > {output}; "
+        """
+        grep ^RES {input} | awk -F ':' '{{ print $2 }}' >> {output} || true
+        """
 
 rule rabema_table:
     input:
@@ -27,7 +29,7 @@ rule rabema_table:
     output:
         "{prefix}/{reads}_{limit}.{reference}.{errors}.{category}.tab"
     script:
-        "../scripts/rabema_tex.R"
+        "./scripts/rabema_tex.R"
 
 
 
